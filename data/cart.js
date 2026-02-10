@@ -24,3 +24,17 @@ export function addToHart(productId, productQuantity){
 export function saveToStorage(){
   localStorage.setItem('cart', JSON.stringify(cart));
 }
+
+export function updateCartQuantity(){
+
+  let cartQuantity = 0;
+
+  cart.forEach(cartItem => {
+
+    cartQuantity += cartItem.productQuantity;
+
+  });
+
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
+}

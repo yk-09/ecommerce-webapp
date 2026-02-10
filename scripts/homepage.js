@@ -3,8 +3,10 @@ import { products } from '../data/products.js';
 
 import { formatCurrency } from './utility/format-currency.js';
 
-import { cart, addToHart, saveToStorage } from '../data/cart.js';
+import { cart, addToHart, saveToStorage, updateCartQuantity } from '../data/cart.js';
 
+
+updateCartQuantity();
 
 // generating products html using javascript
 let productsHTML = '';
@@ -81,5 +83,8 @@ document.querySelectorAll('.js-add-to-hart-button')
 
       // save the updated cart to storage 
       saveToStorage();
+
+      // lets update the cart quantity on the homepage
+      updateCartQuantity();
     }); 
   });
