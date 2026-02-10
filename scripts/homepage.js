@@ -3,7 +3,7 @@ import { products } from '../data/products.js';
 
 import { formatCurrency } from './utility/format-currency.js';
 
-import { cart, addToHart } from '../data/cart.js';
+import { cart, addToHart, saveToStorage } from '../data/cart.js';
 
 
 // generating products html using javascript
@@ -72,12 +72,14 @@ document.querySelectorAll('.js-add-to-hart-button')
       // select quantity selector attatced to this button 
       const quantitySelector = document.getElementById(`js-quantity-selector-${productId}`);
 
-      // get the valu out of it 
+      // get the value out of it 
       const productQuantity = Number(quantitySelector.value);
 
       // logic to add product to cart 
       addToHart(productId, productQuantity);
       // console.log(cart);
-      
+
+      // save the updated cart to storage 
+      saveToStorage();
     }); 
   });
