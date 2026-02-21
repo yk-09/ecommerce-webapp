@@ -3,7 +3,7 @@
 
 Welcome to **The Desire Store**. This project is a deep dive into building a functional, responsive shopping experience using an "Engineering First" approach to frontend development.
 
-🚀 [**Live Demo**](https://yk-09.github.io/ecommerce-webapp/homepage.html)
+🚀 [**Live Demo**](https://yk-09.github.io/ecommerce-webapp/index.html)
 
 ---
 
