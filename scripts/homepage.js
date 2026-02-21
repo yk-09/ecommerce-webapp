@@ -5,8 +5,8 @@ import { formatCurrency } from './utility/format-currency.js';
 
 import { cart, addToHart, saveToStorage, updateCartQuantity } from '../data/cart.js';
 
-
-updateCartQuantity();
+document.querySelector('.js-cart-quantity')
+  .innerHTML = updateCartQuantity();
 
 // generating products html using javascript
 let productsHTML = '';
@@ -85,6 +85,7 @@ document.querySelectorAll('.js-add-to-hart-button')
       saveToStorage();
 
       // lets update the cart quantity on the homepage
-      updateCartQuantity();
+      document.querySelector('.js-cart-quantity')
+        .innerHTML = updateCartQuantity();
     }); 
   });
