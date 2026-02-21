@@ -1,72 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    Homepage
-  </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Homepage
+    </title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
 
-  <link href="styles/homepage.css" rel="stylesheet">
-</head>
+    <link href="styles/general.css" rel="stylesheet" />
+    <link href="styles/homepage.css" rel="stylesheet" />
+  </head>
 
+  <body>
+    <!-- navbar for our homepage -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="images/brand-icon.jpg" alt="kaamna" />
+        </a>
 
-<body>
-
-  <!-- navbar for our homepage -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-
-      <a class="navbar-brand" href="#">
-        <img src="images/brand-icon.jpg" alt="kaamna">
-      </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-        <div class="search-bar">
-          <button class="btn" type="submit">
-            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-          <input type="search" placeholder="Apni kaamna khojiye (Search your desires)" aria-label="Search"/>
-        </div>
-        <div class="cart-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-          </svg>
-          <span class="cart-quantity js-cart-quantity">1</span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="search-bar">
+            <button class="btn" type="submit">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#888"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+            <input
+              type="search"
+              placeholder="Apni kaamna khojiye (Search your desires)"
+              aria-label="Search"
+            />
+          </div>
+          <div class="cart-wrapper">
+            <a href="checkout.html">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                />
+              </svg>
+            </a>
+            <span class="cart-quantity js-cart-quantity">1</span>
+          </div>
         </div>
       </div>
+    </nav>
+
+    <!-- hero text -->
+    <div class="hero-container">
+      <h1 class="hero-main">
+        Jaha <span class="red-line">Paisa</span> khatam hota hai... <br />
+        <span class="green-underline">Par Kaamna nahi.</span>
+      </h1>
+      <p class="hero-italic">
+        Try karke dekhlo.
+      </p>
     </div>
-  </nav>
 
-  <!-- hero text -->
-  <div class="hero-container">
-    <h1 class="hero-main">
-      Jaha <span class="red-line">Paisa</span> khatam hota hai... <br>
-      <span class="green-underline">Par Kaamna nahi.</span>
-    </h1>
-    <p class="hero-italic">
-      Try karke dekhlo.
-    </p>
-  </div>
-
-  <!-- products container -->
-  <div class="container my-5">
-    <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2 g-4 js-products-row">
-      <!-- generating prodycts html using javascript -->
+    <!-- products container -->
+    <div class="container my-5">
+      <div
+        class="row row-cols-1 row-cols-lg-4 row-cols-md-2 g-4 js-products-row"
+      >
+        <!-- generating prodycts html using javascript -->
+      </div>
     </div>
-  </div> 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
 
-  <script src="scripts/homepage.js" type="module"></script>
-</body>
+    <script src="scripts/homepage.js" type="module"></script>
+  </body>
 </html>
