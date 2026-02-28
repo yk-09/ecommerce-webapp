@@ -18,7 +18,8 @@ export function addToHart(productId, productQuantity){
   }else{
     cart.push({
       productId,
-      productQuantity
+      productQuantity,
+      deliveryOptionId : '1'
     });
   }
 }
