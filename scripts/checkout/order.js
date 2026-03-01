@@ -6,6 +6,7 @@ import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import getItem from "../utility/matching-item.js";
 import { renderPaymentSummaryHtml } from './payment.js';
 
+console.log(cart);
 export function renderOrderHtml() {
   // updated the checkout quantity
   document.querySelector(".js-checkout-status").innerHTML = `
@@ -42,9 +43,9 @@ export function renderOrderHtml() {
             <div class="product-price">₹${formatCurrency(
               matchingProduct.pricePaisa
             )}</div>
-            <div class="product-quantity">
+            <div class="product-quantity js-product-quantity-${productId}">
               Quantity: ${ cartItem.productQuantity } 
-              <span class="link-primary">Update</span>
+              <span class="link-primary js-update-link" data-product-id="${productId}">Update</span>
               <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
             </div>
           </div>
@@ -125,7 +126,7 @@ export function renderOrderHtml() {
       const { productId } = link.dataset;
       console.log(productId);
 
-      // const duplicateCart = cart.slice();
+      // updating cart on clicking delete link
       cart.forEach((item, position) => {
         if(productId === item.productId){
           cart.splice(position, 1);
@@ -134,6 +135,39 @@ export function renderOrderHtml() {
 
       saveToStorage();
       renderOrderHtml();
+    });
+  });
+
+
+  document.querySelectorAll('.js-update-link').forEach(link => {
+
+    link.addEventListener('click', () => {
+      const { productId } = link.dataset;
+
+      let matchingItem;
+      cart.forEach(item => {
+        if(productId === item.productId){
+          matchingItem = item;
+        };
+      });
+      console.log(productId);
+
+      document.querySelector(`.js-product-quantity-${productId}`)
+        .innerHTML = `
+          <input class="js-input-${productId}" type="number">
+          <span class="link-primary js-save-link-${productId}">Save</span>
+          <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
+        `
+
+      const saveLink = document.querySelector(`.js-save-link-${productId}`);
+      saveLink.addEventListener('click', () => {
+        const updatedQuantityElement = document.querySelector(`.js-input-${productId}`);
+        const updatedQuantity = Number(updatedQuantityElement.value);
+        matchingItem.productQuantity = updatedQuantity;
+        saveToStorage();
+        renderOrderHtml();
+        console.log(cart);
+      });
     });
   });
 }
