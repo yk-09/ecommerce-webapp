@@ -43,10 +43,9 @@ export function renderOrderHtml() {
               matchingProduct.pricePaisa
             )}</div>
             <div class="product-quantity">
-              Quantity: ${
-                cartItem.productQuantity
-              } <span class="link-primary">Update</span>
-              <span class="link-primary js-delete">Delete</span>
+              Quantity: ${ cartItem.productQuantity } 
+              <span class="link-primary">Update</span>
+              <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
             </div>
           </div>
 
@@ -118,6 +117,23 @@ export function renderOrderHtml() {
       saveToStorage();
       renderOrderHtml();
       renderPaymentSummaryHtml();
+    });
+  });
+
+  document.querySelectorAll('.js-delete-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const { productId } = link.dataset;
+      console.log(productId);
+
+      // const duplicateCart = cart.slice();
+      cart.forEach((item, position) => {
+        if(productId === item.productId){
+          cart.splice(position, 1);
+        }
+      });
+
+      saveToStorage();
+      renderOrderHtml();
     });
   });
 }
