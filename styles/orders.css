@@ -1,0 +1,124 @@
+/* Kaamna Design System */
+:root {
+    --kaamna-green: #1a3a2a;
+    --kaamna-cream: #f9f7f0;
+    --kaamna-border: #d5d9d9;
+    --text-dark: #1a3a2a;
+    --text-muted: #565959;
+    --white: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--kaamna-cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* Header Styling */
+.kaamna-header {
+    background: var(--white);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--kaamna-border);
+}
+
+.header-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.brand-identity { display: flex; align-items: center; gap: 12px; }
+.logo { width: 200px; border-radius: 50%; }
+.brand-text h1 { font-size: 1.5rem; letter-spacing: 1px; line-height: 1; }
+.brand-text p { font-size: 0.75rem; opacity: 0.8; }
+
+/* Order Card Styling */
+.order-card {
+    background: var(--white);
+    border: 1px solid var(--kaamna-border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.order-card-header {
+    background: #f0f2f2;
+    padding: 15px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--kaamna-border);
+}
+
+.label { color: var(--text-muted); display: block; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; }
+.value { font-weight: 500; }
+
+.order-body {
+    /* padding: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between;
+    align-items: flex-start; */
+}
+
+.order{
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-info { display: flex; gap: 20px; }
+.product-thumb { width: 100px; height: 100px; object-fit: contain; border-radius: 8px; }
+
+.product-details h3 { font-size: 1.1rem; margin-bottom: 5px; color: var(--kaamna-green); }
+.status { font-weight: 700; color: #007600; margin-bottom: 5px; }
+.qty { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; }
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--kaamna-border);
+    transition: all 0.2s ease;
+}
+
+.btn-primary { background: var(--kaamna-green); color: var(--white); width: 200px; }
+.btn-secondary { background: var(--kaamna-green); color: var(--white); border-color: var(--kaamna-green); }
+.btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.order-footer {
+    padding: 12px 20px;
+    background: var(--kaamna-cream);
+    border-top: 1px solid var(--kaamna-border);
+    text-align: center;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-card-header { flex-direction: column; gap: 10px; }
+    .order { flex-direction: column; gap: 20px; align-items: center;}
+    .product-info { flex-direction: column; align-items: center; text-align: center; }
+    .product-actions{ width: 100%;}
+    .btn-primary { width: 100%;}
+    .header-container { flex-direction: column; text-align: center; gap: 15px; }
+}

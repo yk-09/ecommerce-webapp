@@ -46,11 +46,49 @@ export function renderPaymentSummaryHtml(){
         <span>Order total:</span> <span>₹${formatCurrency(grandTotal)}</span>
       </div>
 
-      <button class="kaamna-btn">FULFILL YOUR DESIRES</button>
+      <button class="kaamna-btn js-kaamna-btn">FULFILL YOUR DESIRES</button>
     </div>
   `
 
   document.querySelector('.js-payment-summary')
     .innerHTML = paymentHTML;
 
+  async function createOrder(){
+
+    const orderData = {
+      orderId: crypto.randomUUID(),
+      orderTime: new Date().toISOString(), 
+      products: cart,
+      totalPrice: cart.reduce((sum, item) => sum + item.pricePaisa, 0)
+    };
+
+    try{
+      console.log('confirming your order');
+      const response = await fetch('https://69ada80eb50a169ec87fef13.mockapi.io/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      });
+      console.log(response);
+      if(!response.ok){
+        throw 'error';
+      }
+
+      const orders = await response.json();
+      console.log(orders);
+    }catch(error){
+      console.log(error);
+    }
+
+    window.location.href = 'orders.html';
+  }
+
+  document.querySelector('.js-kaamna-btn')
+    .addEventListener('click', () => {
+      console.log('creating order');
+      console.log(cart);
+      createOrder();
+    });
 }
