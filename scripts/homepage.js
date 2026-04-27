@@ -10,7 +10,7 @@ getProducts();
 function renderProductsHtml(products){
 
   document.querySelector('.js-cart-quantity')
-    .innerHTML = updateCartQuantity();
+    // .innerHTML = updateCartQuantity();
 
   const productsHtml = products.map(product => {
 
@@ -99,12 +99,12 @@ async function getProducts(){
   try{
     console.log('loading...');
     const response = await fetch('https://69ada80eb50a169ec87fef13.mockapi.io/products');
+    
+    if(!response.ok){
+      throw new Error(`http error status: ${response.status}`);
+    }
     const products = await response.json();
     console.log(products);
-
-    if(!response.status){
-      throw 'error';
-    };
 
     renderProductsHtml(products);
   }catch(error){

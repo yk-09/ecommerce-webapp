@@ -17,61 +17,45 @@ async function getOrderData(){
   }
 }
 
+// console.log(localStorage.getItem('KamnaProducts'));
+// console.log(localStorage.getItem('KamnaOptions'));
+
+const products = JSON.parse(localStorage.getItem('KamnaProducts')); 
+const deliveryOptions = JSON.parse(localStorage.getItem('KamnaOptions')); 
 getOrderData();
 
 function renderOrderHtml(orders){
   const ordersHtml = orders.map((order) => {
+
+    const dateString = order.orderTime;
+    const date = new Date(dateString);
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+      month: 'long', 
+      day: 'numeric'
+    });
+
+
     const orderHtml = 
     `
       <article class="order-card">
         <header class="order-card-header">
           <div class="meta-item">
             <span class="label">Order Placed:</span>
-            <span class="value">March 30</span>
+            <span class="value">${formattedDate}</span>
           </div>
           <div class="meta-item">
             <span class="label">Total:</span>
-            <span class="value">Rs 63.50</span>
+            <span class="value">Rs ${(order.totalPrice / 100).toFixed(2)}</span>
           </div>
           <div class="meta-item order-id-group">
             <span class="label">Order ID:</span>
-            <span class="value">2cb8be55-54d8-5c11-7e37-2e801825ff55</span>
+            <span class="value">${order.orderId}</span>
           </div>
         </header>
 
         <div class="order-body">
-          <div class="order">
-            <div class="product-info">
-              <img src="images/products/6-piece-non-stick-baking-set.webp" alt="Nordic Mug Set" class="product-thumb" />
-              <div class="product-details">
-                <h3>Nordic Mug Set - Sarcasm-Proofed</h3>
-                <p class="status">
-                  Arriving on: <span class="arrival-date">March 31</span>
-                </p>
-                <p class="qty">Quantity: 2</p>
-                <button class="btn btn-secondary">Buy it again</button>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn btn-primary">Track package</button>
-            </div>
-          </div>
-          <div class="order">
-            <div class="product-info">
-              <img src="images/products/6-piece-white-dinner-plate-set.jpg" alt="6 Piece White Dinner Plate Set" class="product-thumb" />
-              <div class="product-details">
-                <h3>6 Piece White Dinner Plate Set</h3>
-                <p class="status">
-                  Arriving on: <span class="arrival-date">March 31</span>
-                </p>
-                <p class="qty">Quantity: 2</p>
-                <button class="btn btn-secondary">Buy it again</button>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn btn-primary">Track package</button>
-            </div>
-          </div>
+          ${renderOrderProducts(order)}
         </div>
 
         <footer class="order-footer">
@@ -85,4 +69,51 @@ function renderOrderHtml(orders){
   }).join('');
 
   console.log(ordersHtml);
+  document.querySelector('.js-order-list')
+    .innerHTML = ordersHtml;
+}
+
+function renderOrderProducts(order){
+
+  const productsHtml = order.products.map((orderItem) => {
+
+    // normalization for product
+    let matchingProduct;
+    products.forEach(product => {
+      if(orderItem.productId === product.id){
+        matchingProduct = product;
+      }
+    });
+
+    // normalization for deliveryoptions
+    let matchingOption;
+    deliveryOptions.forEach(option => {
+      if(orderItem.deliveryOptionId === option.id){
+        matchingOption = option;
+      }
+    });
+
+    const productHtml = `
+      <div class="order">
+        <div class="product-info">
+          <img src=${matchingProduct.image} alt="Nordic Mug Set" class="product-thumb" />
+          <div class="product-details">
+            <h3>${matchingProduct.name}</h3>
+            <p class="status">
+              Arriving on: <span class="arrival-date">March 31</span>
+            </p>
+            <p class="qty">Quantity: ${orderItem.productQuantity}</p>
+            <button class="btn btn-secondary">Buy it again</button>
+          </div>
+        </div>
+        <div class="product-actions">
+          <button class="btn btn-primary">Track package</button>
+        </div>
+      </div>
+    `
+
+    return productHtml;
+  }).join('');
+
+  return productsHtml;
 }

@@ -21,6 +21,9 @@ export async function fetchAllData(){
     console.log('All data fetched:', data);
     renderOrderHtml(data);
     renderPaymentSummaryHtml(data);
+    const [cart, products, deliveryOptions] = data;
+    localStorage.setItem('KamnaProducts', JSON.stringify(products));
+    localStorage.setItem('KamnaOptions', JSON.stringify(deliveryOptions));
   }
   catch(error){
     console.error('One or more fetches failed:', error);
