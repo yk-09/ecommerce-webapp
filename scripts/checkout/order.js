@@ -1,37 +1,51 @@
-import { cart, saveToStorage, updateCartQuantity } from "../../data/cart.js";
+import {
+  /* cart, saveToStorage,*/ updateCartQuantity,
+} from "../../data/cart.js";
 import { products } from "../../data/products.js";
 import { formatCurrency } from "../utility/format-currency.js";
-import { deliveryOptions } from "../../data/delivery-options.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import getItem from "../utility/matching-item.js";
-import { renderPaymentSummaryHtml } from './payment.js';
+import { renderPaymentSummaryHtml } from "./payment.js";
+import { fetchAllData } from "../checkout.js";
 
-console.log(cart);
-export function renderOrderHtml() {
+// console.log(cart);
+
+fetchAllData();
+
+export function renderOrderHtml(data) {
+  const [cart, products, deliveryOptions] = data;
+  console.log(cart);
+  console.log(products);
+  console.log(deliveryOptions);
+
   // updated the checkout quantity
   document.querySelector(".js-checkout-status").innerHTML = `
     <div class="checkout-status js-checkout-status">
-      <h2>Checkout (${updateCartQuantity()} items)</h2>
+      <h2>Checkout (${updateCartQuantity(cart)} items)</h2>
     </div>
   `;
 
-  let ordersHtml = "";
+  const ordersHtml = cart
+    .map((cartItem) => {
+      const { productId, deliveryOptionId } = cartItem;
 
-  cart.forEach((cartItem) => {
-    const { productId, deliveryOptionId } = cartItem;
+      // normalization for products
+      const matchingProduct = getItem(products, productId);
 
-    // normalization for products
-    const matchingProduct = getItem(products, productId);
+      // normalization of delivery options
+      const matchingOption = getItem(deliveryOptions, deliveryOptionId);
 
-    // normalization of delivery options
-    const matchingOption = getItem(deliveryOptions, deliveryOptionId);
+      console.log(matchingOption);
+      // delivery date
+      const todayDate = dayjs();
+      console.log(todayDate);
 
-    // delivery date
-    const todayDate = dayjs();
-    const deliveryDate = todayDate.add(matchingOption.days, "days");
-    const deliveryDateFormatted = deliveryDate.format("dddd, MMMM D");
+      const deliveryDate = todayDate.add(matchingOption.deliveryDays, "days");
 
-    ordersHtml += `
+      const deliveryDateFormatted = deliveryDate.format("dddd, MMMM D");
+
+      console.log(deliveryDateFormatted);
+      let orderHtml = `
       <div class="cart-item-container">
         <div class="delivery-date">Delivery date: ${deliveryDateFormatted}</div>
 
@@ -44,7 +58,7 @@ export function renderOrderHtml() {
               matchingProduct.pricePaisa
             )}</div>
             <div class="product-quantity js-product-quantity-${productId}">
-              Quantity: ${ cartItem.productQuantity } 
+              Quantity: ${cartItem.productQuantity} 
               <span class="link-primary js-update-link" data-product-id="${productId}">Update</span>
               <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
             </div>
@@ -59,25 +73,29 @@ export function renderOrderHtml() {
         </div>
       </div>
     `;
-  });
 
+      return orderHtml;
+    })
+    .join("");
+
+  console.log(ordersHtml);
   function renderDeliveryOptions(productId, cartItem) {
-    let deliveryOptionsHtml = "";
     let deliveryDateFormatted;
-    deliveryOptions.forEach((deliveryOption) => {
-      // delivery date
-      const todayDate = dayjs();
-      const deliveryDate = todayDate.add(deliveryOption.days, "days");
-      deliveryDateFormatted = deliveryDate.format("dddd, MMMM D");
+    const deliveryOptionsHtml = deliveryOptions
+      .map((deliveryOption) => {
+        // delivery date
+        const todayDate = dayjs();
+        const deliveryDate = todayDate.add(deliveryOption.deliveryDays, "days");
+        deliveryDateFormatted = deliveryDate.format("dddd, MMMM D");
 
-      // checked delivery option
-      const isChecked =
-        deliveryOption.id === cartItem.deliveryOptionId ? "checked" : "";
-      let cost = deliveryOption.shippingCost;
-      deliveryOptionsHtml += `
-        <div class="delivery-option js-delivery-option" data-product-id="${productId}" data-delivery-option-id="${
-        deliveryOption.id
-      }">
+        // checked delivery option
+        const isChecked =
+          deliveryOption.id === cartItem.deliveryOptionId ? "checked" : "";
+        let cost = deliveryOption.shippingCost;
+        let deliveryOptionHtml = `
+        <div class="delivery-option js-delivery-option" data-cart-item-id="${
+          cartItem.id
+        }" data-delivery-option-id="${deliveryOption.id}">
           <input type="radio" ${isChecked} name="delivery-${productId}" />
           <div>
             <span class="date">
@@ -86,7 +104,10 @@ export function renderOrderHtml() {
           </div>
         </div>
       `;
-    });
+
+        return deliveryOptionHtml;
+      })
+      .join("");
 
     return { deliveryOptionsHtml, deliveryDateFormatted };
   }
@@ -97,38 +118,72 @@ export function renderOrderHtml() {
   document.querySelectorAll(".js-delivery-option").forEach((option) => {
     option.addEventListener("click", () => {
       // console.log('hehe');
-      const { productId, deliveryOptionId } = option.dataset;
+      const { cartItemId, deliveryOptionId } = option.dataset;
       // console.log(productId);
       // console.log(deliveryOptionId);
 
       // console.log(cart);
 
-      let matchingItem;
+      // let matchingItem;
 
-      cart.forEach((item) => {
-        if (item.productId === productId) {
-          matchingItem = item;
+      // cart.forEach((item) => {
+      //   if (item.productId === productId) {
+      //     matchingItem = item;
+      //   }
+      // });
+      async function updateDeliveryOption(
+        cartItemId,
+        newDeliveryOptionId
+      ) {
+        try {
+          // 1. The URL usually includes the ID of the item you are updating
+          const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${cartItemId}`;
+
+          // 2. Make the PUT request
+          const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // 3. Send the new data as a JSON string
+            body: JSON.stringify({
+              deliveryOptionId: newDeliveryOptionId,
+            }),
+          });
+
+          // 4. Check if the update was successful
+          if (!response.ok) {
+            throw new Error(
+              `Error: ${response.status} - Failed to update delivery option`
+            );
+          }
+
+          const updatedData = await response.json();
+          console.log("Success! Cart item updated:", updatedData);
+          fetchAllData();
+
+          return updatedData;
+        } catch (error) {
+          console.error("Failed to send PUT request:", error);
         }
-        // console.log('working-loop');
-      });
-      console.log(matchingItem);
-      matchingItem.deliveryOptionId = deliveryOptionId;
-      console.log(matchingItem);
+      }
 
-      saveToStorage();
-      renderOrderHtml();
-      renderPaymentSummaryHtml();
+      updateDeliveryOption(cartItemId, deliveryOptionId);
+
+      // console.log(matchingItem);
+      // matchingItem.deliveryOptionId = deliveryOptionId;
+      // console.log(matchingItem);
     });
   });
 
-  document.querySelectorAll('.js-delete-link').forEach(link => {
-    link.addEventListener('click', () => {
+  document.querySelectorAll(".js-delete-link").forEach((link) => {
+    link.addEventListener("click", () => {
       const { productId } = link.dataset;
       console.log(productId);
 
       // updating cart on clicking delete link
       cart.forEach((item, position) => {
-        if(productId === item.productId){
+        if (productId === item.productId) {
           cart.splice(position, 1);
         }
       });
@@ -138,30 +193,29 @@ export function renderOrderHtml() {
     });
   });
 
-
-  document.querySelectorAll('.js-update-link').forEach(link => {
-
-    link.addEventListener('click', () => {
+  document.querySelectorAll(".js-update-link").forEach((link) => {
+    link.addEventListener("click", () => {
       const { productId } = link.dataset;
 
       let matchingItem;
-      cart.forEach(item => {
-        if(productId === item.productId){
+      cart.forEach((item) => {
+        if (productId === item.productId) {
           matchingItem = item;
-        };
+        }
       });
       console.log(productId);
 
-      document.querySelector(`.js-product-quantity-${productId}`)
-        .innerHTML = `
+      document.querySelector(`.js-product-quantity-${productId}`).innerHTML = `
           <input class="js-input-${productId}" type="number">
           <span class="link-primary js-save-link-${productId}">Save</span>
           <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
-        `
+        `;
 
       const saveLink = document.querySelector(`.js-save-link-${productId}`);
-      saveLink.addEventListener('click', () => {
-        const updatedQuantityElement = document.querySelector(`.js-input-${productId}`);
+      saveLink.addEventListener("click", () => {
+        const updatedQuantityElement = document.querySelector(
+          `.js-input-${productId}`
+        );
         const updatedQuantity = Number(updatedQuantityElement.value);
         matchingItem.productQuantity = updatedQuantity;
         saveToStorage();

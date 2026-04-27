@@ -1,10 +1,15 @@
-import { cart, updateCartQuantity } from "../../data/cart.js";
+import { /*cart,*/updateCartQuantity } from "../../data/cart.js";
 import { formatCurrency } from "../utility/format-currency.js";
-import { products } from "../../data/products.js";
+// import { products } from "../../data/products.js";
 import getItem from "../utility/matching-item.js";
-import { deliveryOptions } from "../../data/delivery-options.js";
+// import { deliveryOptions } from "../../data/delivery-options.js";
 
-export function renderPaymentSummaryHtml(){
+export function renderPaymentSummaryHtml(data){
+
+  const [cart, products, deliveryOptions] = data;
+  console.log(cart);
+  console.log(products);
+  console.log(deliveryOptions);
   let totalProductsCost = 0;
   let shippingCost = 0;
 
@@ -30,7 +35,7 @@ export function renderPaymentSummaryHtml(){
     <div class="payment-summary">
       <h3>The Cost of Desire</h3>
       <div class="summary-row">
-        <span>Items (${updateCartQuantity()}):</span> <span>₹${formatCurrency(totalProductsCost)}</span>
+        <span>Items (${updateCartQuantity(cart)}):</span> <span>₹${formatCurrency(totalProductsCost)}</span>
       </div>
       <div class="summary-row">
         <span>Shipping & handling:</span> <span>₹${formatCurrency(shippingCost)}</span>
@@ -53,13 +58,26 @@ export function renderPaymentSummaryHtml(){
   document.querySelector('.js-payment-summary')
     .innerHTML = paymentHTML;
 
+
+  // get matching products from existing cart. 
+  console.log(cart);
+  console.log(products);
+  let cartItems;
+  cart.forEach((cartItem) => {
+    cartItems = products.filter((product) => {
+      return product.id === cartItem.productId; 
+    });
+  });
+
+  console.log(cartItems);
+
   async function createOrder(){
 
     const orderData = {
       orderId: crypto.randomUUID(),
       orderTime: new Date().toISOString(), 
       products: cart,
-      totalPrice: cart.reduce((sum, item) => sum + item.pricePaisa, 0)
+      totalPrice: grandTotal
     };
 
     try{
@@ -76,8 +94,8 @@ export function renderPaymentSummaryHtml(){
         throw 'error';
       }
 
-      const orders = await response.json();
-      console.log(orders);
+      const order = await response.json();
+      // console.log(order);
     }catch(error){
       console.log(error);
     }

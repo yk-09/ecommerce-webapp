@@ -30,7 +30,7 @@ export function saveToStorage(){
 }
 
 // update the quantity of the cart
-export function updateCartQuantity(){
+export function updateCartQuantity(cart){
 
   let cartQuantity = 0;
 
@@ -38,7 +38,7 @@ export function updateCartQuantity(){
 
     cartQuantity += cartItem.productQuantity;
 
-  });
+  }); 
 
   return cartQuantity;
 }
