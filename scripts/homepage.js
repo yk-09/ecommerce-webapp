@@ -1,21 +1,27 @@
-// importing products array from products.js file 
+// importing products array from products.js file
 // import { products } from '../data/products.js';
 
-import { formatCurrency } from './utility/format-currency.js';
+import { formatCurrency } from "./utility/format-currency.js";
 
-import { addToHart, saveToStorage, updateCartQuantity } from '../data/cart.js';
+import { addToHart, saveToStorage, updateCartQuantity } from "../data/cart.js";
+
+// expanding navbar
+const expandBtnEle = document.querySelector(".js-expand-menu-btn");
+const mobileMenuEle = document.querySelector(".js-mobile-menu");
+
+expandBtnEle.addEventListener("click", () => {
+  mobileMenuEle.classList.toggle("mobile-menu-expanded");
+});
 
 getProducts();
 
-function renderProductsHtml(products){
+function renderProductsHtml(products) {
+  document.querySelector(".js-cart-quantity");
+  // .innerHTML = updateCartQuantity();
 
-  document.querySelector('.js-cart-quantity')
-    // .innerHTML = updateCartQuantity();
-
-  const productsHtml = products.map(product => {
-
-    const productHtml = 
-      `
+  const productsHtml = products
+    .map((product) => {
+      const productHtml = `
       <div class="col">
         <div class="card">
           <div class="image-box">
@@ -35,7 +41,9 @@ function renderProductsHtml(products){
                 (${product.rating.count})
               </div>
             </div>
-            <select name="product-quantity" id="js-quantity-selector-${product.id}">
+            <select name="product-quantity" id="js-quantity-selector-${
+              product.id
+            }">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -47,68 +55,72 @@ function renderProductsHtml(products){
               <option value="9">9</option>
               <option value="10">10</option>
             </select>
-            <button class="btn add-to-cart-button js-add-to-hart-button" data-product-id="${product.id}">
+            <button class="btn add-to-cart-button js-add-to-hart-button" data-product-id="${
+              product.id
+            }">
               Add to Hart
             </button>
           </div>
         </div>
       </div>
-      `
-    return productHtml;  
-  }).join('');
+      `;
+      return productHtml;
+    })
+    .join("");
 
   // console.log(productsHTML);
 
-  document.querySelector('.js-products-row')
-    .innerHTML = productsHtml;
+  document.querySelector(".js-products-row").innerHTML = productsHtml;
 
   // after te html is rendered make add to hart button interactive
 
-  document.querySelectorAll('.js-add-to-hart-button')
-    .forEach(button => {
-      button.addEventListener('click', () => {
+  document.querySelectorAll(".js-add-to-hart-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      // check if its working
+      // console.log('working');
 
-        // check if its working
-        // console.log('working');
+      const { productId } = button.dataset;
 
-        const { productId } = button.dataset;
+      // select quantity selector attatced to this button
+      const quantitySelector = document.getElementById(
+        `js-quantity-selector-${productId}`
+      );
 
-        // select quantity selector attatced to this button 
-        const quantitySelector = document.getElementById(`js-quantity-selector-${productId}`);
+      // get the value out of it
+      const productQuantity = Number(quantitySelector.value);
 
-        // get the value out of it 
-        const productQuantity = Number(quantitySelector.value);
+      // logic to add product to cart
+      addToHart(productId, productQuantity);
+      // console.log(cart);
 
-        // logic to add product to cart 
-        addToHart(productId, productQuantity);
-        // console.log(cart);
+      // save the updated cart to storage
+      saveToStorage();
 
-        // save the updated cart to storage 
-        saveToStorage();
-
-        // lets update the cart quantity on the homepage
-        document.querySelector('.js-cart-quantity')
-          .innerHTML = updateCartQuantity();
-      }); 
+      // lets update the cart quantity on the homepage
+      document.querySelector(
+        ".js-cart-quantity"
+      ).innerHTML = updateCartQuantity();
     });
-
+  });
 }
 
-// products from the backend i.e. a get request 
-async function getProducts(){
-  try{
-    console.log('loading...');
-    const response = await fetch('https://69ada80eb50a169ec87fef13.mockapi.io/products');
-    
-    if(!response.ok){
+// products from the backend i.e. a get request
+async function getProducts() {
+  try {
+    console.log("loading...");
+    const response = await fetch(
+      "https://69ada80eb50a169ec87fef13.mockapi.io/products"
+    );
+
+    if (!response.ok) {
       throw new Error(`http error status: ${response.status}`);
     }
     const products = await response.json();
     console.log(products);
 
     renderProductsHtml(products);
-  }catch(error){
-    console.log('unexpected error! please try again later!');
+  } catch (error) {
+    console.log("unexpected error! please try again later!");
     console.log(error);
   }
-};
+}

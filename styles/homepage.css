@@ -2,66 +2,6 @@ p{
   margin: 0;
 }
 
-/* navbar */
-.navbar img{
-  width: 200px;
-  height: 70px;
-}
-
-.navbar{
-  box-shadow: 0px 2px 15px rgb(0,0,0);
-  margin: 15px;
-}
-
-.collapse{
-  display: flex;
-  justify-content: flex-end;
-}
-
-.search-bar{
-  /* width: 70%; */
-  flex-grow: 1;
-  max-width: 70%;
-  display: flex;
-  justify-content: flex-start;
-  background-color: #f1f1f1;
-  padding: 5px 10px;
-  border-radius: 30px;
-}
-
-.search-bar button{
-  padding: 0px 10px;
-  border: none;
-  margin-bottom: 4px;
-}
-
-.search-bar input:focus{
-  outline: none;
-}
-
-.search-bar input{
-  padding: 10px 8px;
-  background-color: transparent;
-  flex-grow: 1;
-  border: none;
-}
-
-.cart-wrapper{
-  margin: 0px 10px;
-  padding: 8px;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.cart-wrapper a{
-  text-decoration: none;
-  color: #0e3020;
-}
-
-.cart-wrapper:hover{
-  border: 2px solid #0e3020;
-}
-
 /* hero text */
 
 .hero-container {
