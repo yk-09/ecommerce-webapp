@@ -101,7 +101,7 @@ function handleAddedMessage(target){
   return ( 
     setTimeout(()=>{
       addedMessageEle.classList.remove('show');
-    },3000)
+    },1000)
   )
 
 }

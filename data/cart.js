@@ -54,7 +54,9 @@ export async function getCartBackend(productQuantity, productId){
       updateCart(cart, productQuantity, productId);
     }else{
       saveToStorage(cart);
-      document.querySelector('.js-cart-quantity').innerText = updateCartQuantity(cart);
+      const cartQuantity = updateCartQuantity(cart);
+      document.querySelector('.js-cart-quantity-ld').innerText = cartQuantity;
+      document.querySelector('.js-cart-quantity-sd').innerText = cartQuantity;
     }
   }catch(e){
     console.error(e);
