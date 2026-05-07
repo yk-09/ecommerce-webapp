@@ -1,9 +1,6 @@
-// importing products array from products.js file
-// import { products } from '../data/products.js';
-
 import { formatCurrency } from "./utility/format-currency.js";
 
-import { addToHart, saveToStorage, updateCartQuantity } from "../data/cart.js";
+import { addToHart, getCartBackend } from '../data/cart.js';
 
 // expanding navbar
 const expandBtnEle = document.querySelector(".js-expand-menu-btn");
@@ -14,19 +11,19 @@ expandBtnEle.addEventListener("click", () => {
 });
 
 getProducts();
+getCartBackend();
 
 function renderProductsHtml(products) {
-  document.querySelector(".js-cart-quantity");
-  // .innerHTML = updateCartQuantity();
 
+  const productsRowEle = document.querySelector(".js-products-row");
   const productsHtml = products
     .map((product) => {
       const productHtml = `
       <div class="col">
-        <div class="card">
-          <div class="image-box">
-            <img src="${product.image}" class="card-img-top" alt="...">
-          </div>
+        <article class="card">
+          <figure class="image-box">
+            <img loading="lazy" src="${product.image}" class="card-img-top" alt="${product.name} image">
+          </figure>
           <div class="card-body">
             <p class="card-title">${product.name}</p>
             <p class="card-text">
@@ -61,7 +58,7 @@ function renderProductsHtml(products) {
               Add to Hart
             </button>
           </div>
-        </div>
+        </article>
       </div>
       `;
       return productHtml;
@@ -70,38 +67,23 @@ function renderProductsHtml(products) {
 
   // console.log(productsHTML);
 
-  document.querySelector(".js-products-row").innerHTML = productsHtml;
+  productsRowEle.innerHTML = productsHtml;
 
-  // after te html is rendered make add to hart button interactive
+  // after te html is rendered make add to hart button interactive 
 
-  document.querySelectorAll(".js-add-to-hart-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      // check if its working
-      // console.log('working');
+  productsRowEle.addEventListener('click', (e) => {
+    const target = e.target;
 
-      const { productId } = button.dataset;
-
-      // select quantity selector attatced to this button
-      const quantitySelector = document.getElementById(
-        `js-quantity-selector-${productId}`
-      );
-
-      // get the value out of it
-      const productQuantity = Number(quantitySelector.value);
-
-      // logic to add product to cart
+    if(e.target.matches('.js-add-to-hart-button')){
+      const {productId} = target.dataset;
+      
+      const quantitySelectorEle = target.previousElementSibling;
+      const productQuantity = Number(quantitySelectorEle.value);
+      
       addToHart(productId, productQuantity);
-      // console.log(cart);
-
-      // save the updated cart to storage
-      saveToStorage();
-
-      // lets update the cart quantity on the homepage
-      document.querySelector(
-        ".js-cart-quantity"
-      ).innerHTML = updateCartQuantity();
-    });
+    }
   });
+
 }
 
 // products from the backend i.e. a get request
@@ -117,6 +99,8 @@ async function getProducts() {
     }
     const products = await response.json();
     console.log(products);
+
+    localStorage.setItem("kamnaProducts", JSON.stringify(products));
 
     renderProductsHtml(products);
   } catch (error) {
