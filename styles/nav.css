@@ -15,7 +15,7 @@ header{
 
 .navbar-large-screens button{
   border: none;
-  padding: 15px;
+  padding: 17px 15px;
   border-bottom-left-radius: 30px;
   border-top-left-radius: 30px;
 }
@@ -31,7 +31,6 @@ header{
   background-color: rgb(240, 240, 240);
   outline: none;
 }
-
 
 .order-page-link{
   text-decoration: none;
@@ -88,7 +87,7 @@ header{
 }
 
 .mobile-menu-expanded{
-  height: 200px;
+  height: 100px;
 }
 
 .mobile-menu label{
@@ -114,6 +113,33 @@ header{
   border-bottom-right-radius: 15px;
   background-color: rgb(240, 240, 240);
   outline: none;
+  flex-grow: 1;
+  max-width: 700px;
+}
+
+.search-products-sd{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.search-products-sd button{
+  padding: 8px;
+  border: none;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0px;
 }
 
 .cart-wrapper{
@@ -133,6 +159,10 @@ header{
   text-decoration: none;
   color: #0e3020;
   font-size: 1.2rem;
+}
+
+.cart-wrapper:hover a{
+  text-decoration: underline;
 }
 
 .cart-wrapper svg{
@@ -169,4 +199,8 @@ header{
     border: 2px solid #0e3020;
     margin: 0;
   } 
+
+  .search-products-sd{
+    display: none;
+  }
 }
