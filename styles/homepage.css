@@ -101,7 +101,7 @@ p{
   padding: 5px 10px;
   font-weight: 500;
   font-size: 14px;
-  margin-top: 15px;
+  margin-top: 5px;
 }
 
 .card-body{
@@ -138,4 +138,15 @@ p{
 .image-box img{
   width: 100px;
   max-height: 100%;
+}
+
+.added-message{
+  color: #0E3020;
+  /* display: none; */
+  opacity: 0;
+}
+
+.show{
+  /* display: block; */
+  opacity: 1;
 }

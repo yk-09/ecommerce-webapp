@@ -1,29 +1,3 @@
-// persistant shopping cart
-// export const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// add products to cart
-// export function addToHart(productId, productQuantity){
-
-//   let matchingProduct;
-
-//   cart.forEach(cartItem => {
-
-//     if(cartItem.productId === productId){
-//       matchingProduct = cartItem;
-//     };
-//   });
-
-//   if(matchingProduct){
-//     matchingProduct.productQuantity += productQuantity;
-//   }else{
-//     cart.push({
-//       productId,
-//       productQuantity,
-//       deliveryOptionId : '1'
-//     });
-//   }
-// }
-
 export function addToHart(productId, productQuantity){
   console.log(productId);
   console.log(productQuantity);

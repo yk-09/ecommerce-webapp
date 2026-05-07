@@ -169,6 +169,13 @@ header{
   margin: 0;
 }
 
+.fixed{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 1000;
+}
 
 @media (min-width: 1024px) {
   .navbar-large-screens{

@@ -1,6 +1,6 @@
 import { formatCurrency } from "./utility/format-currency.js";
-
 import { addToHart, getCartBackend } from '../data/cart.js';
+import { getProducts } from '../data/products.js';
 
 // expanding navbar
 const expandBtnEle = document.querySelector(".js-expand-menu-btn");
@@ -10,7 +10,7 @@ expandBtnEle.addEventListener("click", () => {
   mobileMenuEle.classList.toggle("mobile-menu-expanded");
 });
 
-getProducts();
+getProducts(renderProductsHtml);
 getCartBackend();
 
 function renderProductsHtml(products) {
@@ -52,6 +52,7 @@ function renderProductsHtml(products) {
               <option value="9">9</option>
               <option value="10">10</option>
             </select>
+            <div class="added-message js-added-message">✔ Added</div>
             <button class="btn add-to-cart-button js-add-to-hart-button" data-product-id="${
               product.id
             }">
@@ -70,41 +71,46 @@ function renderProductsHtml(products) {
   productsRowEle.innerHTML = productsHtml;
 
   // after te html is rendered make add to hart button interactive 
-
+  let timeoutId;
   productsRowEle.addEventListener('click', (e) => {
     const target = e.target;
 
     if(e.target.matches('.js-add-to-hart-button')){
       const {productId} = target.dataset;
       
-      const quantitySelectorEle = target.previousElementSibling;
+      const quantitySelectorEle = target.previousElementSibling.previousElementSibling;
       const productQuantity = Number(quantitySelectorEle.value);
       
       addToHart(productId, productQuantity);
+      if(timeoutId){
+        clearTimeout(timeoutId);
+        timeoutId = handleAddedMessage(target);
+      }else{
+        timeoutId = handleAddedMessage(target);
+      };
     }
   });
 
+};
+
+function handleAddedMessage(target){
+  const addedMessageEle = target.previousElementSibling;
+  console.log(addedMessageEle);
+  addedMessageEle.classList.add('show');
+
+  return ( 
+    setTimeout(()=>{
+      addedMessageEle.classList.remove('show');
+    },3000)
+  )
+
 }
 
-// products from the backend i.e. a get request
-async function getProducts() {
-  try {
-    console.log("loading...");
-    const response = await fetch(
-      "https://69ada80eb50a169ec87fef13.mockapi.io/products"
-    );
-
-    if (!response.ok) {
-      throw new Error(`http error status: ${response.status}`);
-    }
-    const products = await response.json();
-    console.log(products);
-
-    localStorage.setItem("kamnaProducts", JSON.stringify(products));
-
-    renderProductsHtml(products);
-  } catch (error) {
-    console.log("unexpected error! please try again later!");
-    console.log(error);
+const headerEle = document.querySelector('header');
+document.addEventListener('scroll', (e) => {
+  if(scrollY > 151){
+    headerEle.classList.add('fixed');
+  }else{
+    headerEle.classList.remove('fixed');
   }
-}
+});
