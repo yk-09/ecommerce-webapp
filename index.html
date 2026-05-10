@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
     <title>
       Homepage
     </title>
@@ -17,9 +17,35 @@
     <link href="styles/general.css" rel="stylesheet" />
     <link rel="stylesheet" href="styles/nav.css">
     <link href="styles/homepage.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles/homepage-skeleton.css">
   </head>
 
   <body>
+    <div class="loading-homepage js-loading-homepage">
+      <div class="nav">
+        <div class="image skeleton"></div>
+        <div class="search skeleton"></div>
+        <div class="return-orders skeleton"></div>
+        <div class="hart skeleton"></div>
+      </div>
+
+      <div class="hero-section">
+        <div class="p-1 skeleton"></div>
+        <div class="p-2 skeleton"></div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product skeleton">
+        </div>
+        <div class="product skeleton">
+        </div>
+        <div class="product skeleton">
+        </div>
+        <div class="product skeleton">
+        </div>
+      </div>
+    </div>
+
     <header>
       <nav class="navbar-large-screens">
         <figure>
@@ -130,7 +156,7 @@
     </header>
 
     <!-- hero text -->
-    <section class="hero-container">
+    <section class="hero-container js-hero-section">
       <h1 class="hero-main">
         Jaha <span class="red-line">Paisa</span> khatam hota hai... <br />
         <span class="green-underline">Par Kaamna nahi.</span>

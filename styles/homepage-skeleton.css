@@ -1,0 +1,97 @@
+.loading-homepage{
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  transition: hidden 0.5s ease-in-out;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border: 1px solid #ddd;
+  margin: 20px;
+}
+
+.image {
+  width: 200px;
+  height: 100px;
+}
+
+.search {
+  width: 100px;
+  height: 50px;
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.return-orders {
+  width: 100px;
+  height: 60px;
+}
+
+.hart {
+  width: 100px;
+  height: 40px;
+}
+
+/* for hero section */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.p-1 {
+  height: 50px;
+  width: 400px;
+}
+
+.p-2 {
+  height: 50px;
+  width: 200px;
+}
+
+/* products grid */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 200px);
+  row-gap: 10px;
+  gap: 10px;
+  margin: 20px;
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+.product {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+/* shimmer effect */
+
+.skeleton {
+  background-color: #e5e7eb;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: load 1.5s linear infinite;
+}
+
+@keyframes load {
+    from{
+      background-position: 200%;
+    }
+
+    to{
+      background-position: -200%;
+    }
+  }

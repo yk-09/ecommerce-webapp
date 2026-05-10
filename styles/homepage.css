@@ -2,12 +2,21 @@ p{
   margin: 0;
 }
 
+.hidden{
+  display: none;
+}
+
 /* hero text */
+
+header{
+  transition: display 0.5s ease-in-out;
+}
 
 .hero-container {
   padding: 50px;
   max-width: 80%;
   text-align: center;
+  transition: display 0.5s ease-in-out;
 }
 
 .hero-main {
