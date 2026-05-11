@@ -1,97 +1,116 @@
-.loading-homepage{
-  position: fixed;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  transition: hidden 0.5s ease-in-out;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 .nav {
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 30px;
   border: 1px solid #ddd;
-  margin: 20px;
+  margin: 10px;
 }
 
 .image {
-  width: 200px;
-  height: 100px;
-}
-
-.search {
-  width: 100px;
-  height: 50px;
-  flex-grow: 1;
-  max-width: 500px;
-}
-
-.return-orders {
-  width: 100px;
   height: 60px;
+  width: 150px;
 }
 
 .hart {
-  width: 100px;
-  height: 40px;
+  height: 50px;
+  width: 80px;
 }
 
-/* for hero section */
+/* hero section */
+
 .hero-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .p-1 {
-  height: 50px;
-  width: 400px;
+  height: 20px;
+  width: 150px;
 }
 
 .p-2 {
-  height: 50px;
-  width: 200px;
+  height: 20px;
+  width: 80px;
 }
 
-/* products grid */
-
+/* product grid */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  row-gap: 10px;
+  grid-template-columns: 300px;
+  justify-content: center;
   gap: 10px;
-  margin: 20px;
   border: 1px solid #ddd;
-  padding: 20px;
+  margin: 10px;
+  padding: 10px;
 }
 
 .product {
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  height: 200px;
 }
 
-/* shimmer effect */
+@media (min-width: 768px) {
+  .nav {
+    gap: 20px;
+  }
 
+  .search {
+    height: 30px;
+    flex-grow: 1;
+  }
+
+  .return-orders {
+    height: 40px;
+    width: 100px;
+  }
+
+  .p-1 {
+    height: 20px;
+    width: 250px;
+  }
+
+  .p-2 {
+    height: 20px;
+    width: 180px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 .skeleton {
-  background-color: #e5e7eb;
+  background-color: #ddd;
   border-radius: 10px;
+
   background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
   background-size: 200% 100%;
   animation: load 1.5s linear infinite;
 }
 
 @keyframes load {
-    from{
-      background-position: 200%;
-    }
-
-    to{
-      background-position: -200%;
-    }
+  from {
+    background-position: 200%;
   }
+
+  to {
+    background-position: -200%;
+  }
+}

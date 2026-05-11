@@ -298,14 +298,11 @@ export const products = [
 export async function getProducts(renderProductsHtml) {
 
   const homepageSkeletonEle = document.querySelector('.js-loading-homepage');
-  const headerEle = document.querySelector('header');
+  const headerEle = document.querySelector('.js-homepage-header');
   const heroSectionEle = document.querySelector('.js-hero-section');
 
   try {
     // console.log("loading...");
-
-    headerEle.classList.add('hidden');
-    heroSectionEle.classList.add('hidden');
 
     const response = await fetch(
       "https://69ada80eb50a169ec87fef13.mockapi.io/products"
