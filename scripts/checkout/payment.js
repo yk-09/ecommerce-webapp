@@ -4,12 +4,7 @@ import { formatCurrency } from "../utility/format-currency.js";
 import getItem from "../utility/matching-item.js";
 // import { deliveryOptions } from "../../data/delivery-options.js";
 
-export function renderPaymentSummaryHtml(data){
-
-  const [cart, products, deliveryOptions] = data;
-  console.log(cart);
-  console.log(products);
-  console.log(deliveryOptions);
+export function renderPaymentSummaryHtml(deliveryOptions, cart, products){
   let totalProductsCost = 0;
   let shippingCost = 0;
 

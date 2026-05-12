@@ -121,7 +121,7 @@ function saveToStorage(cart){
 }
 
 // update the quantity of the cart
-function updateCartQuantity(cart){
+export function updateCartQuantity(cart){
 
   let cartQuantity = 0;
 

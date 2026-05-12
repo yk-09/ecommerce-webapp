@@ -1,33 +1,21 @@
-import {
-  /* cart, saveToStorage,*/ updateCartQuantity,
-} from "../../data/cart.js";
-import { products } from "../../data/products.js";
+import { updateCartQuantity } from '../../data/cart.js'
+import { getDeliveryOptionsBackend } from '../checkout.js';
 import { formatCurrency } from "../utility/format-currency.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import getItem from "../utility/matching-item.js";
 import { renderPaymentSummaryHtml } from "./payment.js";
-import { fetchAllData } from "../checkout.js";
 
-// console.log(cart);
+getDeliveryOptionsBackend();
+const cartQuantityEle = document.querySelector('.js-checkout-quantity');
 
-fetchAllData();
+cartQuantityEle.innerText = `CheckOut( ${updateCartQuantity(JSON.parse(localStorage.getItem('cart')))} items )`;
 
-export function renderOrderHtml(data) {
-  const [cart, products, deliveryOptions] = data;
-  console.log(cart);
-  console.log(products);
+export function renderOrderHtml(deliveryOptions, cart, products) {
+
   console.log(deliveryOptions);
-
-  // updated the checkout quantity
-  document.querySelector(".js-checkout-status").innerHTML = `
-    <div class="checkout-status js-checkout-status">
-      <h2>Checkout (${updateCartQuantity(cart)} items)</h2>
-    </div>
-  `;
-
-  const ordersHtml = cart
-    .map((cartItem) => {
+  const ordersHtml = cart.map((cartItem) => {
       const { productId, deliveryOptionId } = cartItem;
+      console.log(deliveryOptionId);
 
       // normalization for products
       const matchingProduct = getItem(products, productId);
