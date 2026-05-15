@@ -1,23 +1,40 @@
-import { formatCurrency } from "./utility/format-currency.js";
-import { addToHart, getCartBackend } from '../data/cart.js';
-import { getProducts } from '../data/products.js';
+import { formatCurrency } from "./utility/format-currency";
+import { addToHart, getCartBackend } from './data/cart';
+import { getProducts } from './data/products';
 
 // expanding navbar
-const expandBtnEle = document.querySelector(".js-expand-menu-btn");
-const mobileMenuEle = document.querySelector(".js-mobile-menu");
+const expandBtnEle = document.querySelector(".js-expand-menu-btn") as HTMLButtonElement;
+const mobileMenuEle = document.querySelector(".js-mobile-menu") as HTMLDivElement;
 
-expandBtnEle.addEventListener("click", () => {
-  mobileMenuEle.classList.toggle("mobile-menu-expanded");
-});
+if(expandBtnEle && mobileMenuEle){
+  expandBtnEle.addEventListener("click", () => {
+    mobileMenuEle.classList.toggle("mobile-menu-expanded");
+  });
+};
 
 getProducts(renderProductsHtml);
 getCartBackend();
+console.log('got products')
 
-function renderProductsHtml(products) {
+export interface Rating {
+  stars: number,
+  count: number
+}
 
-  const productsRowEle = document.querySelector(".js-products-row");
+export interface Product {
+  readonly id: string,
+  image: string,
+  name: string, 
+  rating: Rating,
+  pricePaisa: number
+}
+
+function renderProductsHtml(products: Product[]): void {
+
+  const productsRowEle = document.querySelector(".js-products-row") as HTMLDivElement;
+
   const productsHtml = products
-    .map((product) => {
+    .map((product: Product): string => {
       const productHtml = `
       <div class="col">
         <article class="card">
@@ -67,34 +84,38 @@ function renderProductsHtml(products) {
     .join("");
 
   // console.log(productsHTML);
-
-  productsRowEle.innerHTML = productsHtml;
+  if(productsRowEle){
+    productsRowEle.innerHTML = productsHtml;
+  }
+  
 
   // after te html is rendered make add to hart button interactive 
-  let timeoutId;
-  productsRowEle.addEventListener('click', (e) => {
-    const target = e.target;
+  let timeoutId: number;
+  if(productsRowEle){
+    productsRowEle.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
 
-    if(e.target.matches('.js-add-to-hart-button')){
-      const {productId} = target.dataset;
-      
-      const quantitySelectorEle = target.previousElementSibling.previousElementSibling;
-      const productQuantity = Number(quantitySelectorEle.value);
-      
-      addToHart(productId, productQuantity);
-      if(timeoutId){
-        clearTimeout(timeoutId);
-        timeoutId = handleAddedMessage(target);
-      }else{
-        timeoutId = handleAddedMessage(target);
-      };
-    }
-  });
+        if(target.matches('.js-add-to-hart-button')){
+          const { productId } = target.dataset as { productId: string };
+          const addedessage = target.previousElementSibling as HTMLDivElement
+          const quantitySelectorEle = addedessage.previousElementSibling as HTMLSelectElement;
+          const productQuantity: number = Number(quantitySelectorEle.value);
+          
+          addToHart(productId, productQuantity);
+          if(timeoutId){
+            clearTimeout(timeoutId);
+            timeoutId = handleAddedMessage(target);
+          }else{
+            timeoutId = handleAddedMessage(target);
+          };
+        }
+    });
+  }
 
 };
 
-function handleAddedMessage(target){
-  const addedMessageEle = target.previousElementSibling;
+function handleAddedMessage(target: HTMLElement){
+  const addedMessageEle = target.previousElementSibling as HTMLDivElement;
   console.log(addedMessageEle);
   addedMessageEle.classList.add('show');
 
@@ -103,14 +124,15 @@ function handleAddedMessage(target){
       addedMessageEle.classList.remove('show');
     },1000)
   )
-
 }
 
-const headerEle = document.querySelector('header');
-document.addEventListener('scroll', (e) => {
-  if(scrollY > 151){
-    headerEle.classList.add('fixed');
-  }else{
-    headerEle.classList.remove('fixed');
-  }
-});
+const headerEle = document.querySelector('header') as HTMLElement;
+if(headerEle){
+  document.addEventListener('scroll', () => {
+    if(scrollY > 151){
+      headerEle.classList.add('fixed');
+    }else{
+      headerEle.classList.remove('fixed');
+    }
+  });
+};
