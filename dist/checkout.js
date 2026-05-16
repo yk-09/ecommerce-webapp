@@ -9,8 +9,10 @@ export async function getDeliveryOptionsBackend() {
             throw new Error(`Unepected Http Error: ${response.status}-${response.statusText}`);
         }
         const deliveryOptions = await response.json();
-        const cart = JSON.parse(localStorage.getItem('cart'));
-        const products = JSON.parse(localStorage.getItem('kamnaProducts'));
+        const cartData = localStorage.getItem('cart') || '[]';
+        const cart = JSON.parse(cartData);
+        const productData = localStorage.getItem('kamnaProducts') || '[]';
+        const products = JSON.parse(productData);
         renderOrderHtml(deliveryOptions, cart, products);
         renderPaymentSummaryHtml(deliveryOptions, cart, products);
         console.log(deliveryOptions);

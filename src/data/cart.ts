@@ -117,7 +117,7 @@ async function updateCartItemQuantity(newQty: number, cartItemId: string){
 
 // saves cart to local storage 
 
-interface CartItem {
+export interface CartItem {
   productId: string,
   productQuantity: number,
   deliveryOptionId: string,

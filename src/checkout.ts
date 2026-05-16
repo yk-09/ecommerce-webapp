@@ -1,8 +1,10 @@
 import { renderOrderHtml } from './checkout/order';
 import { renderPaymentSummaryHtml } from './checkout/payment';
+import { CartItem } from './data/cart';
+import { Product } from './homepage';
 
 
-export async function getDeliveryOptionsBackend(){
+export async function getDeliveryOptionsBackend() {
   const url = 'https://69d1185f90cd06523d5dd7c7.mockapi.io/delivery-options'
   try{
     console.log('loading state');
@@ -13,9 +15,13 @@ export async function getDeliveryOptionsBackend(){
     }
 
     const deliveryOptions = await response.json();
-    const cart = JSON.parse(localStorage.getItem('cart'));
 
-    const products = JSON.parse(localStorage.getItem('kamnaProducts'));
+    const cartData = localStorage.getItem('cart') || '[]';
+    const cart: CartItem[] = JSON.parse(cartData);
+
+    const productData = localStorage.getItem('kamnaProducts') || '[]';
+    const products: Product[] = JSON.parse(productData);
+
     renderOrderHtml(deliveryOptions, cart, products);
     renderPaymentSummaryHtml(deliveryOptions, cart, products)
 
