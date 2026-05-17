@@ -1,5 +1,6 @@
 import { CartItem } from "../data/cart";
 import { DeliveryOption, getDeliveryOptions } from "../data/delivery-options";
+import { updateRemoteDeliveryOption, getCartBackend } from '../data/cart';
 import { Product } from "../homepage";
 import dayjs from "dayjs";
 import formatCurrency from "../utility/format-currency";
@@ -77,7 +78,7 @@ export function renderCartSummary(
     })
     .join("");
 
-  console.log(ordersHtml);
+  // console.log(ordersHtml);
   
   function renderDeliveryOptions(productId: string, cartItem: CartItem) {
     let deliveryDateFormatted: string | undefined; 
@@ -97,7 +98,7 @@ export function renderCartSummary(
           cartItem.id
         }" data-delivery-option-id="${deliveryOption.id}">
           <input type="radio" ${isChecked} name="delivery-${productId}" />
-          <div>
+          <div class="js-delivery-info">
             <span class="date">
               ${deliveryDateFormatted}
             </span><br />${cost ? `₹${formatCurrency(cost)}` : `FREE SHIPPING`}
@@ -116,4 +117,27 @@ export function renderCartSummary(
 
   const orderRowEl = document.querySelector(".js-order-review") as HTMLElement
   orderRowEl.innerHTML = ordersHtml;
+
+  orderRowEl.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+
+    const deliveryOptionEl = target.closest('.js-delivery-option') as HTMLElement | null;
+
+    if (!deliveryOptionEl) return;
+
+    const { cartItemId, deliveryOptionId } = deliveryOptionEl.dataset;
+
+    if (cartItemId && deliveryOptionId) {
+      console.log('Gotcha! Securely pulled dataset from the parent container.');
+      console.log('Cart Item ID:', cartItemId);
+      console.log('Delivery Option ID:', deliveryOptionId);
+      updateRemoteDeliveryOption(cartItemId, deliveryOptionId)
+        .then((updatedItem) => {
+          console.log(updatedItem);
+          return getCartBackend()
+        }).then(() => {
+          getDeliveryOptions();
+        });
+    }
+  });
 }

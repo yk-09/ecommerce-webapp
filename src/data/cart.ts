@@ -53,12 +53,8 @@ export async function getCartBackend(productQuantity?: number, productId?: strin
     if(productQuantity && productId){
       updateCart(cart, productQuantity, productId);
     }else{
-      const cartQuantityLdEl = document.querySelector('.js-cart-quantity-ld') as HTMLSpanElement;
-      const cartQuantitySdEl = document.querySelector('.js-cart-quantity-sd') as HTMLSpanElement;
       saveToStorage(cart);
-      const cartQuantity: number = updateCartQuantity(cart);
-      cartQuantityLdEl.innerText = cartQuantity.toString();
-      cartQuantitySdEl.innerText = cartQuantity.toString();
+      return cart
     }
   }catch(e){
     console.error(e);
@@ -109,7 +105,15 @@ async function updateCartItemQuantity(newQty: number, /*cartItemId: string*/ exi
     const updatedData = await response.json();
     console.log(updatedData);
     console.log('Update successful:', updatedData);
-    getCartBackend();
+    getCartBackend()
+      .then((cart) => {
+        const cartQuantityLdEl = document.querySelector('.js-cart-quantity-ld') as HTMLSpanElement;
+        const cartQuantitySdEl = document.querySelector('.js-cart-quantity-sd') as HTMLSpanElement;
+
+        const cartQuantity: number = updateCartQuantity(cart);
+        cartQuantityLdEl.innerText = cartQuantity.toString();
+        cartQuantitySdEl.innerText = cartQuantity.toString();
+      });
   }catch(e){
     console.error('Error updating cart:', e);
   }
@@ -176,4 +180,36 @@ export function updateCartQuantity(cart: CartItem[]): number {
   }); 
 
   return cartQuantity;
+}
+
+
+export async function updateRemoteDeliveryOption(
+  cartItemId: string, 
+  newDeliveryOptionId: string
+): Promise<CartItem | undefined>{
+  const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${cartItemId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json', 
+      },
+      body: JSON.stringify({
+        deliveryOptionId: newDeliveryOptionId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update delivery option. Status: ${response.status}`);
+    }
+
+    const updatedItem: CartItem = await response.json();
+    console.log('Successfully updated delivery option on server:', updatedItem);
+    return updatedItem;
+
+  } catch (error) {
+    console.error('Error executing PUT request to MockAPI:', error);
+    return undefined;
+  }
 }
