@@ -1,2 +1,2 @@
-export declare function getDeliveryOptionsBackend(): Promise<void>;
+export {};
 //# sourceMappingURL=checkout.d.ts.map

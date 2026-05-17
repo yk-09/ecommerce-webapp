@@ -1,6 +1,6 @@
-import { formatCurrency } from "./utility/format-currency";
-import { addToHart, getCartBackend } from './data/cart';
-import { getProducts } from './data/products';
+import formatCurrency from './utility/format-currency.js';
+import { addToHart, getCartBackend } from './data/cart.js';
+import { getProducts } from './data/products.js';
 // expanding navbar
 const expandBtnEle = document.querySelector(".js-expand-menu-btn");
 const mobileMenuEle = document.querySelector(".js-mobile-menu");

@@ -1,4 +1,4 @@
-export function formatCurrency(currency: number): string{
+export default function formatCurrency(currency: number): string{
 
   return ( currency / 100 ).toFixed(2);
 

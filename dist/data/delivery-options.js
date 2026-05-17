@@ -1,3 +1,4 @@
+import { renderCartSummary } from '../checkout/order.js';
 export async function getDeliveryOptions() {
     try {
         console.log('loading...');
@@ -8,6 +9,11 @@ export async function getDeliveryOptions() {
         }
         const deliveryOptions = await response.json();
         console.log(deliveryOptions);
+        const cartData = localStorage.getItem('kamnaCart') || '[]';
+        const cart = JSON.parse(cartData);
+        const productsData = localStorage.getItem('kamnaProducts') || '[]';
+        const products = JSON.parse(productsData);
+        renderCartSummary(deliveryOptions, cart, products);
     }
     catch (error) {
         console.error(error);

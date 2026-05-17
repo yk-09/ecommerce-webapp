@@ -1,4 +1,8 @@
-interface DeliveryOption {
+import { CartItem } from "./cart";
+import { Product } from "../homepage";
+import { renderCartSummary } from '../checkout/order';
+
+export interface DeliveryOption {
   readonly id: string,
   deliveryDays: number,
   shippingCost: number
@@ -16,6 +20,14 @@ export async function getDeliveryOptions(){
 
     const deliveryOptions: DeliveryOption[] = await response.json();
     console.log(deliveryOptions);
+
+
+    const cartData = localStorage.getItem('kamnaCart') || '[]';
+    const cart: CartItem[] = JSON.parse(cartData);
+    
+    const productsData = localStorage.getItem('kamnaProducts') || '[]';
+    const products: Product[]  = JSON.parse(productsData);
+    renderCartSummary(deliveryOptions, cart, products);
 
   } catch(error) {
     console.error(error);

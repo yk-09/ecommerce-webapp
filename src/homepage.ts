@@ -1,4 +1,4 @@
-import { formatCurrency } from "./utility/format-currency";
+import formatCurrency from './utility/format-currency';
 import { addToHart, getCartBackend } from './data/cart';
 import { getProducts } from './data/products';
 
