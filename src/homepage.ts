@@ -1,5 +1,5 @@
 import formatCurrency from './utility/format-currency';
-import { addToHart, getCartBackend } from './data/cart';
+import { addToHart, getCartBackend, updateCartQuantity } from './data/cart';
 import { getProducts } from './data/products';
 
 // expanding navbar
@@ -13,7 +13,15 @@ if(expandBtnEle && mobileMenuEle){
 };
 
 getProducts(renderProductsHtml);
-getCartBackend();
+getCartBackend()
+  .then((cart) => {
+    const cartQuantityLdEl = document.querySelector('.js-cart-quantity-ld') as HTMLSpanElement;
+    const cartQuantitySdEl = document.querySelector('.js-cart-quantity-sd') as HTMLSpanElement;
+
+    const cartQuantity: number = updateCartQuantity(cart);
+    cartQuantityLdEl.innerText = cartQuantity.toString();
+    cartQuantitySdEl.innerText = cartQuantity.toString();
+  });
 console.log('got products')
 
 export interface Rating {

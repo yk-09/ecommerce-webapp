@@ -1,6 +1,7 @@
 import { CartItem } from "./cart";
 import { Product } from "../homepage";
 import { renderCartSummary } from '../checkout/order';
+import { renderPaymentSummaryHtml } from '../checkout/payment';
 
 export interface DeliveryOption {
   readonly id: string,
@@ -28,6 +29,7 @@ export async function getDeliveryOptions(){
     const productsData = localStorage.getItem('kamnaProducts') || '[]';
     const products: Product[]  = JSON.parse(productsData);
     renderCartSummary(deliveryOptions, cart, products);
+    renderPaymentSummaryHtml(deliveryOptions, cart, products);
 
   } catch(error) {
     console.error(error);

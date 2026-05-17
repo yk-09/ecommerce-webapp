@@ -30,7 +30,15 @@ async function addToCartBackend(productId: string, productQuantity: number){
 
     const cart = await response.json();
     console.log(cart);
-    getCartBackend();
+    getCartBackend()
+      .then((cart) => {
+        const cartQuantityLdEl = document.querySelector('.js-cart-quantity-ld') as HTMLSpanElement;
+        const cartQuantitySdEl = document.querySelector('.js-cart-quantity-sd') as HTMLSpanElement;
+
+        const cartQuantity: number = updateCartQuantity(cart);
+        cartQuantityLdEl.innerText = cartQuantity.toString();
+        cartQuantitySdEl.innerText = cartQuantity.toString();
+      });
   }catch(e){
     console.error(e);
   }
