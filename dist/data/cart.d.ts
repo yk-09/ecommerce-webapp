@@ -1,5 +1,6 @@
 export declare function addToHart(productId: string, productQuantity: number): void;
 export declare function getCartBackend(productQuantity?: number, productId?: string): Promise<void>;
+export declare function updateDeliveryOption(cartItemId: string, newDeliveryOptionId: string): Promise<any>;
 export interface CartItem {
     productId: string;
     productQuantity: number;

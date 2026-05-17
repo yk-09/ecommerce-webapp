@@ -1,2 +1,2 @@
-export declare function renderOrderHtml(deliveryOptions: any, cart: any, products: any): void;
+export {};
 //# sourceMappingURL=order.d.ts.map

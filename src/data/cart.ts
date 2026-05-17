@@ -67,30 +67,30 @@ export async function getCartBackend(productQuantity?: number, productId?: strin
 
 function updateCart(cart: CartItem[], productQuantity: number, productId: string){
   let existingProduct: CartItem | undefined;
-  let cartItemId: string | undefined;
+  // let cartItemId: string | undefined;
   cart.forEach(cartItem => {
 
     if(cartItem.productId === productId){
       existingProduct = cartItem;
-      cartItemId = existingProduct.id;
+      // cartItemId = existingProduct.id;
       console.log(existingProduct);
-      console.log(cartItemId);
+      // console.log(cartItemId);
     };
   });
 
-  if(existingProduct && cartItemId){
+  if(existingProduct /* && cartItemId */){
     const newQty = existingProduct.productQuantity + productQuantity;
-    updateCartItemQuantity(newQty, cartItemId);
+    updateCartItemQuantity(newQty, /*cartItemId*/ existingProduct);
   }else{
     addToCartBackend(productId, productQuantity);
   }
 };
  
-async function updateCartItemQuantity(newQty: number, cartItemId: string){
+async function updateCartItemQuantity(newQty: number, /*cartItemId: string*/ existingProduct: CartItem){
 
-  const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${cartItemId}`;
+  const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${existingProduct.id}`;
   try{
-    console.log(cartItemId);
+    // console.log(cartItemId);
     console.log('loading');
     const response = await fetch(url, {
       method: 'PUT',
@@ -115,7 +115,43 @@ async function updateCartItemQuantity(newQty: number, cartItemId: string){
   }
 }
 
-// saves cart to local storage 
+export async function updateDeliveryOption(
+  cartItemId: string,
+  newDeliveryOptionId: string
+) {
+  try {
+    // 1. The URL usually includes the ID of the item you are updating
+    const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${cartItemId}`;
+
+    // 2. Make the PUT request
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // 3. Send the new data as a JSON string
+      body: JSON.stringify({
+        deliveryOptionId: newDeliveryOptionId,
+      }),
+    });
+
+    // 4. Check if the update was successful
+    if (!response.ok) {
+      throw new Error(
+        `Error: ${response.status} - Failed to update delivery option`
+      );
+    }
+
+    const updatedData = await response.json();
+    console.log("Success! Cart item updated:", updatedData);
+    getCartBackend();
+
+    return updatedData;
+  } catch (error) {
+    console.error("Failed to send PUT request:", error);
+  }
+}
+
 
 export interface CartItem {
   productId: string,

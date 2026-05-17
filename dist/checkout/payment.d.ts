@@ -1,2 +1,2 @@
-export declare function renderPaymentSummaryHtml(deliveryOptions: any, cart: any, products: any): void;
+export {};
 //# sourceMappingURL=payment.d.ts.map
