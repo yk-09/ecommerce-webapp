@@ -63,9 +63,9 @@ export function renderCartSummary(
             <div class="delivery-options">
               <div class="option-title">Choose a delivery option:</div>
               <div class="delivery-options">
-                // {
-                //   renderDeliveryOptions(productId, cartItem).deliveryOptionsHtml
-                // }
+                ${
+                  renderDeliveryOptions(productId, cartItem).deliveryOptionsHtml
+                }
               </div>
             </div>
           </div>
@@ -78,6 +78,39 @@ export function renderCartSummary(
     .join("");
 
   console.log(ordersHtml);
+  
+  function renderDeliveryOptions(productId: string, cartItem: CartItem) {
+    let deliveryDateFormatted: string | undefined; 
+    const deliveryOptionsHtml = deliveryOptions
+      .map((deliveryOption) => {
+        // delivery date
+        const todayDate = dayjs();
+        const deliveryDate = todayDate.add(deliveryOption.deliveryDays, "days");
+        deliveryDateFormatted = deliveryDate.format("dddd, MMMM D");
+
+        // checked delivery option
+        const isChecked =
+          deliveryOption.id === cartItem.deliveryOptionId ? "checked" : "";
+        let cost = deliveryOption.shippingCost;
+        let deliveryOptionHtml = `
+        <div class="delivery-option js-delivery-option" data-cart-item-id="${
+          cartItem.id
+        }" data-delivery-option-id="${deliveryOption.id}">
+          <input type="radio" ${isChecked} name="delivery-${productId}" />
+          <div>
+            <span class="date">
+              ${deliveryDateFormatted}
+            </span><br />${cost ? `₹${formatCurrency(cost)}` : `FREE SHIPPING`}
+          </div>
+        </div>
+      `;
+
+        return deliveryOptionHtml;
+      })
+      .join("");
+
+    return { deliveryOptionsHtml, deliveryDateFormatted };
+  }
 
   // rendered cartitems on the page
 
