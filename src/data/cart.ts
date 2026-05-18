@@ -1,6 +1,8 @@
 const cartData = localStorage.getItem('kamnaCart') || '[]';
 export const cart: CartItem[] = JSON.parse(cartData);
 
+const BASE_URL = "https://69d1185f90cd06523d5dd7c7.mockapi.io/cart";
+
 export function addToHart(productId: string, productQuantity: number){
   console.log(productId);
   console.log(productQuantity);
@@ -11,11 +13,10 @@ export function addToHart(productId: string, productQuantity: number){
 
 async function addToCartBackend(productId: string, productQuantity: number){
 
-  const url = 'https://69d1185f90cd06523d5dd7c7.mockapi.io/cart'
   try{
     console.log('loading');
 
-    const response = await fetch(url, {
+    const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -49,10 +50,9 @@ async function addToCartBackend(productId: string, productQuantity: number){
 
 export async function getCartBackend(productQuantity?: number, productId?: string){
 
-  const url = 'https://69d1185f90cd06523d5dd7c7.mockapi.io/cart'
   try{
     console.log('loading');
-    const response = await fetch(url);
+    const response = await fetch(BASE_URL);
 
     if(!response.ok){
       throw new Error(`Unexpected error! http status: ${response.status}`);
@@ -93,7 +93,7 @@ function updateCart(cart: CartItem[], productQuantity: number, productId: string
   }
 };
  
-async function updateCartItemQuantity(newQty: number, /*cartItemId: string*/ existingProduct: CartItem){
+export async function updateCartItemQuantity(newQty: number, /*cartItemId: string*/ existingProduct: CartItem){
 
   const url = `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${existingProduct.id}`;
   try{
@@ -222,5 +222,18 @@ export async function updateRemoteDeliveryOption(
   } catch (error) {
     console.error('Error executing PUT request to MockAPI:', error);
     return undefined;
+  }
+}
+
+export async function deleteRemoteCartItem(cartItemId: string): Promise<boolean> {
+  try {
+    const response = await fetch(`${BASE_URL}/${cartItemId}`, {
+      method: 'DELETE',
+    });
+
+    return response.ok; 
+  } catch (error) {
+    console.error("Error communicating with backend during delete:", error);
+    return false;
   }
 }

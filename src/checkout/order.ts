@@ -1,10 +1,15 @@
-import { CartItem } from "../data/cart";
+import { CartItem, updateCartItemQuantity } from "../data/cart";
 import { DeliveryOption, getDeliveryOptions } from "../data/delivery-options";
-import { updateRemoteDeliveryOption, getCartBackend } from "../data/cart";
+import {
+  updateRemoteDeliveryOption,
+  getCartBackend,
+  deleteRemoteCartItem,
+} from "../data/cart";
 import { Product } from "../homepage";
 import dayjs from "dayjs";
 import formatCurrency from "../utility/format-currency";
 import { renderPaymentSummaryHtml } from "./payment";
+import { renderUpdateCartQuantity } from "../checkout";
 
 export function renderCartSummary(
   deliveryOptions: DeliveryOption[],
@@ -44,7 +49,7 @@ export function renderCartSummary(
 
         console.log(deliveryDateFormatted);
         let orderHtml = `
-        <div class="cart-item-container">
+        <div class="cart-item-container" data-cart-item-id="${cartItem.id}">
           <div class="delivery-date">Delivery date: ${deliveryDateFormatted}</div>
   
           <div class="cart-item-details-grid">
@@ -58,6 +63,17 @@ export function renderCartSummary(
               <div class="product-quantity js-product-quantity-${productId}">
                 Quantity: ${cartItem.productQuantity} 
                 <span class="link-primary js-update-link" data-product-id="${productId}">Update</span>
+
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="10" 
+                  value="${cartItem.productQuantity}" 
+                  class="js-quantity-input hidden" 
+                  style="width: 45px; padding: 2px;" 
+                />
+                <span class="link-primary js-save-link hidden" style="margin-left: 5px;">Save</span>
+
                 <span class="link-primary js-delete-link" data-product-id="${productId}">Delete</span>
               </div>
             </div>
@@ -95,9 +111,9 @@ export function renderCartSummary(
           deliveryOption.id === cartItem.deliveryOptionId ? "checked" : "";
         let cost = deliveryOption.shippingCost;
         let deliveryOptionHtml = `
-        <div class="delivery-option js-delivery-option" data-cart-item-id="${
-          cartItem.id
-        }" data-delivery-option-id="${deliveryOption.id}">
+        <div class="delivery-option js-delivery-option" data-delivery-option-id="${
+          deliveryOption.id
+        }">
           <input type="radio" ${isChecked} name="delivery-${productId}" />
           <div class="js-delivery-info">
             <span class="date">
@@ -125,26 +141,92 @@ const orderRowEl = document.querySelector(".js-order-review") as HTMLElement;
 orderRowEl?.addEventListener("click", async (e) => {
   const target = e.target as HTMLElement;
 
-  const deliveryOptionEl = target.closest(
-    ".js-delivery-option"
-  ) as HTMLElement | null;
+  const masterBox = target.closest(".cart-item-container") as HTMLElement | null;
+  if (!masterBox) return;
 
-  if (!deliveryOptionEl) return;
+  const { cartItemId } = masterBox.dataset as { cartItemId: string };
 
-  const { cartItemId, deliveryOptionId } = deliveryOptionEl.dataset;
+  const clickedDelete = target.closest(".js-delete-link") as HTMLSpanElement | null;
+  if (clickedDelete) {
+    clickedDelete.textContent = "Deleting...";
+    clickedDelete.style.pointerEvents = "none";
 
-  if (cartItemId && deliveryOptionId) {
-    console.log("Gotcha! Securely pulled dataset from the parent container.");
-    console.log("Cart Item ID:", cartItemId);
-    console.log("Delivery Option ID:", deliveryOptionId);
+    const serverDeleteSuccessful = await deleteRemoteCartItem(cartItemId);
+
+    if (serverDeleteSuccessful) {
+      console.log(`Successfully removed item ${cartItemId} from server!`);
+      masterBox.remove();
+
+      try {
+        const [freshCart, freshOptions] = await Promise.all([
+          getCartBackend(),
+          getDeliveryOptions(),
+        ]);
+
+        const productsData = localStorage.getItem("kamnaProducts") || "[]";
+        const products: Product[] = JSON.parse(productsData);
+
+        if (freshOptions && freshCart && products) {
+          renderPaymentSummaryHtml(freshOptions, freshCart, products);
+          console.log("Payment summary successfully updated!");
+
+          renderCartSummary(freshOptions, freshCart, products);
+          console.log("Cart summary successfully updated!");
+
+          renderUpdateCartQuantity(freshCart);
+        }
+      } catch (refreshError) {
+        console.error("Failed to fetch fresh data after deleting item:", refreshError);
+      }
+    } else {
+      alert("Uh oh! Could not delete the item from the server. Try again.");
+      clickedDelete.textContent = "Delete";
+      clickedDelete.style.pointerEvents = "auto";
+    }
+    return;
+  }
+
+  const clickedUpdate = target.closest(".js-update-link");
+  if (clickedUpdate) {
+    const updateLink = masterBox.querySelector(".js-update-link") as HTMLSpanElement;
+    const saveLink = masterBox.querySelector(".js-save-link") as HTMLSpanElement;
+    const quantityInput = masterBox.querySelector(".js-quantity-input") as HTMLInputElement;
+    const quantityLabel = masterBox.querySelector(".js-quantity-label") as HTMLElement;
+
+    console.log(quantityInput);
+    console.log(saveLink);
+    updateLink.classList.toggle('hidden');
+
+    quantityInput.classList.toggle('hidden');
+    saveLink.classList.toggle('hidden');
+
+    console.log(quantityInput);
+    console.log(saveLink);
+    quantityInput.focus();
+    return; 
+  }
+
+  const clickedSave = target.closest(".js-save-link") as HTMLSpanElement | null;
+
+  if (clickedSave) {
+    const saveLink = masterBox.querySelector(".js-save-link") as HTMLElement;
+    const quantityInput = masterBox.querySelector(".js-quantity-input") as HTMLInputElement;
+
+    const newQuantity = parseInt(quantityInput.value, 10);
+
+    if (isNaN(newQuantity) || newQuantity < 1 || newQuantity > 10) {
+      alert("Please enter a valid quantity between 1 and 10.");
+      return;
+    }
+
+    saveLink.textContent = "Saving...";
+    saveLink.style.pointerEvents = "none";
 
     try {
-      const updatedItem = await updateRemoteDeliveryOption(
-        cartItemId,
-        deliveryOptionId
-      );
-      console.log(updatedItem);
-
+     
+      await updateCartItemQuantity(newQuantity, { id: cartItemId } as CartItem);
+      console.log("Server quantity successfully updated using your function!");
+      
       const [freshCart, freshOptions] = await Promise.all([
         getCartBackend(),
         getDeliveryOptions(),
@@ -153,19 +235,51 @@ orderRowEl?.addEventListener("click", async (e) => {
       const productsData = localStorage.getItem("kamnaProducts") || "[]";
       const products: Product[] = JSON.parse(productsData);
 
-      console.log("Fetched fresh data concurrently:", {
-        freshCart,
-        freshOptions,
-      });
-
       if (freshOptions && freshCart && products) {
         renderPaymentSummaryHtml(freshOptions, freshCart, products);
-        console.log("Payment summary successfully updated!");
         renderCartSummary(freshOptions, freshCart, products);
-        console.log("Cart summary successfully updated!");
+        renderUpdateCartQuantity(freshCart);
       }
     } catch (error) {
-      console.error("One of the API calls failed:", error);
+      console.error("Network error while saving quantity:", error);
+      saveLink.textContent = "Save";
+      saveLink.style.pointerEvents = "auto";
     }
+    return; 
+  }
+
+  const clickedShippingCard = target.closest(".js-delivery-option") as HTMLElement | null;
+  if (clickedShippingCard) {
+    const deliveryOptionId = clickedShippingCard.dataset.deliveryOptionId;
+    if (cartItemId && deliveryOptionId) {
+      console.log("Gotcha! Securely pulled dataset from the parent container.");
+      console.log("Cart Item ID:", cartItemId);
+      console.log("Delivery Option ID:", deliveryOptionId);
+
+      try {
+        const updatedItem = await updateRemoteDeliveryOption(cartItemId, deliveryOptionId);
+        console.log(updatedItem);
+
+        const [freshCart, freshOptions] = await Promise.all([
+          getCartBackend(),
+          getDeliveryOptions(),
+        ]);
+
+        const productsData = localStorage.getItem("kamnaProducts") || "[]";
+        const products: Product[] = JSON.parse(productsData);
+
+        console.log("Fetched fresh data concurrently:", { freshCart, freshOptions });
+
+        if (freshOptions && freshCart && products) {
+          renderPaymentSummaryHtml(freshOptions, freshCart, products);
+          console.log("Payment summary successfully updated!");
+          renderCartSummary(freshOptions, freshCart, products);
+          console.log("Cart summary successfully updated!");
+        }
+      } catch (error) {
+        console.error("One of the API calls failed:", error);
+      }
+    }
+    return;
   }
 });

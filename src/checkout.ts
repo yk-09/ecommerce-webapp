@@ -1,14 +1,18 @@
 import { getDeliveryOptions } from './data/delivery-options';
-import { cart, updateCartQuantity } from './data/cart';
+import { cart, CartItem, updateCartQuantity } from './data/cart';
 import { products } from './data/products';
 import { renderCartSummary } from './checkout/order';
 import { renderPaymentSummaryHtml } from './checkout/payment';
 
-const cartQuantityEl = document.querySelector('.js-checkout-quantity') as HTMLHeadingElement;
+export function renderUpdateCartQuantity(cart: CartItem[]){
+  const cartQuantityEl = document.querySelector('.js-checkout-quantity') as HTMLHeadingElement;
 
-if(cartQuantityEl){
-  cartQuantityEl.innerText = `Checkout(${updateCartQuantity(cart)} items)`;
-}
+  if(cartQuantityEl){
+    cartQuantityEl.innerText = `Checkout(${updateCartQuantity(cart)} items)`;
+  }
+};
+
+renderUpdateCartQuantity(cart);
 
 getDeliveryOptions()
   .then((deliveryOptions) => {
