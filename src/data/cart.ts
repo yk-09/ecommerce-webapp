@@ -1,3 +1,6 @@
+const cartData = localStorage.getItem('kamnaCart') || '[]';
+export const cart: CartItem[] = JSON.parse(cartData);
+
 export function addToHart(productId: string, productQuantity: number){
   console.log(productId);
   console.log(productQuantity);

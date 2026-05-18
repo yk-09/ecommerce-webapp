@@ -1,9 +1,10 @@
 import { CartItem } from "../data/cart";
 import { DeliveryOption, getDeliveryOptions } from "../data/delivery-options";
-import { updateRemoteDeliveryOption, getCartBackend } from '../data/cart';
+import { updateRemoteDeliveryOption, getCartBackend } from "../data/cart";
 import { Product } from "../homepage";
 import dayjs from "dayjs";
 import formatCurrency from "../utility/format-currency";
+import { renderPaymentSummaryHtml } from "./payment";
 
 export function renderCartSummary(
   deliveryOptions: DeliveryOption[],
@@ -79,9 +80,9 @@ export function renderCartSummary(
     .join("");
 
   // console.log(ordersHtml);
-  
+
   function renderDeliveryOptions(productId: string, cartItem: CartItem) {
-    let deliveryDateFormatted: string | undefined; 
+    let deliveryDateFormatted: string | undefined;
     const deliveryOptionsHtml = deliveryOptions
       .map((deliveryOption) => {
         // delivery date
@@ -115,29 +116,56 @@ export function renderCartSummary(
 
   // rendered cartitems on the page
 
-  const orderRowEl = document.querySelector(".js-order-review") as HTMLElement
+  const orderRowEl = document.querySelector(".js-order-review") as HTMLElement;
   orderRowEl.innerHTML = ordersHtml;
-
-  orderRowEl.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-
-    const deliveryOptionEl = target.closest('.js-delivery-option') as HTMLElement | null;
-
-    if (!deliveryOptionEl) return;
-
-    const { cartItemId, deliveryOptionId } = deliveryOptionEl.dataset;
-
-    if (cartItemId && deliveryOptionId) {
-      console.log('Gotcha! Securely pulled dataset from the parent container.');
-      console.log('Cart Item ID:', cartItemId);
-      console.log('Delivery Option ID:', deliveryOptionId);
-      updateRemoteDeliveryOption(cartItemId, deliveryOptionId)
-        .then((updatedItem) => {
-          console.log(updatedItem);
-          return getCartBackend()
-        }).then(() => {
-          getDeliveryOptions();
-        });
-    }
-  });
 }
+
+const orderRowEl = document.querySelector(".js-order-review") as HTMLElement;
+
+orderRowEl?.addEventListener("click", async (e) => {
+  const target = e.target as HTMLElement;
+
+  const deliveryOptionEl = target.closest(
+    ".js-delivery-option"
+  ) as HTMLElement | null;
+
+  if (!deliveryOptionEl) return;
+
+  const { cartItemId, deliveryOptionId } = deliveryOptionEl.dataset;
+
+  if (cartItemId && deliveryOptionId) {
+    console.log("Gotcha! Securely pulled dataset from the parent container.");
+    console.log("Cart Item ID:", cartItemId);
+    console.log("Delivery Option ID:", deliveryOptionId);
+
+    try {
+      const updatedItem = await updateRemoteDeliveryOption(
+        cartItemId,
+        deliveryOptionId
+      );
+      console.log(updatedItem);
+
+      const [freshCart, freshOptions] = await Promise.all([
+        getCartBackend(),
+        getDeliveryOptions(),
+      ]);
+
+      const productsData = localStorage.getItem("kamnaProducts") || "[]";
+      const products: Product[] = JSON.parse(productsData);
+
+      console.log("Fetched fresh data concurrently:", {
+        freshCart,
+        freshOptions,
+      });
+
+      if (freshOptions && freshCart && products) {
+        renderPaymentSummaryHtml(freshOptions, freshCart, products);
+        console.log("Payment summary successfully updated!");
+        renderCartSummary(freshOptions, freshCart, products);
+        console.log("Cart summary successfully updated!");
+      }
+    } catch (error) {
+      console.error("One of the API calls failed:", error);
+    }
+  }
+});

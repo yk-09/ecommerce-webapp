@@ -1,5 +1,9 @@
 import { Product } from "../homepage";
+const productsData = localStorage.getItem('kamnaProducts') || '[]';
+export const products: Product[]  = JSON.parse(productsData);
+
 type RenderProducts = (products: Product[]) => void
+
 export async function getProducts(renderProductsHtml: RenderProducts) {
 
   const homepageSkeletonEle = document.querySelector('.js-loading-homepage') as HTMLElement;
