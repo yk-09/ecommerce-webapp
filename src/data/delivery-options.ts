@@ -16,6 +16,7 @@ export async function getDeliveryOptions(){
 
     const deliveryOptions: DeliveryOption[] = await response.json();
     console.log(deliveryOptions);
+    saveToStorage(deliveryOptions);
     return deliveryOptions;
 
   } catch(error) {
@@ -23,4 +24,8 @@ export async function getDeliveryOptions(){
   } finally {
     // end loading state and make other changes
   }
+};
+
+function saveToStorage(deliveryOptions: DeliveryOption[]): void{
+  localStorage.setItem('kaamnaOptions', JSON.stringify(deliveryOptions));
 };

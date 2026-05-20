@@ -174,6 +174,15 @@ orderRowEl?.addEventListener("click", async (e) => {
           console.log("Cart summary successfully updated!");
 
           renderUpdateCartQuantity(freshCart);
+          
+          if(!freshCart.length){
+            const checkoutEmptyEl = document.querySelector('.js-cart-empty') as HTMLElement;
+            const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
+
+            checkoutEmptyEl.classList.remove('hidden');
+
+            checkoutGridEl.classList.add('hidden');
+          }
         }
       } catch (refreshError) {
         console.error("Failed to fetch fresh data after deleting item:", refreshError);

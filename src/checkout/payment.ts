@@ -2,6 +2,7 @@ import formatCurrency from '../utility/format-currency';
 import { CartItem, updateCartQuantity } from '../data/cart';
 import { Product } from '../homepage';
 import { DeliveryOption } from '../data/delivery-options';
+import { createOrder } from '../data/orders-data';
 
 export function renderPaymentSummaryHtml(
   deliveryOptions: DeliveryOption[]
@@ -79,38 +80,6 @@ export function renderPaymentSummaryHtml(
   });
 
   console.log(cartItems);
-
-  async function createOrder(){
-
-    const orderData = {
-      orderId: crypto.randomUUID(),
-      orderTime: new Date().toISOString(), 
-      products: cart,
-      totalPrice: grandTotal
-    };
-
-    try{
-      console.log('confirming your order');
-      const response = await fetch('https://69ada80eb50a169ec87fef13.mockapi.io/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-      });
-      console.log(response);
-      if(!response.ok){
-        throw 'error';
-      }
-
-      const order = await response.json();
-      // console.log(order);
-    }catch(error){
-      console.log(error);
-    }
-
-    window.location.href = 'orders.html';
-  }
   
   const placeOrderBtnEl = document.querySelector('.js-kaamna-btn') as HTMLButtonElement;
 
@@ -118,7 +87,7 @@ export function renderPaymentSummaryHtml(
     placeOrderBtnEl.addEventListener('click', () => {
       console.log('creating order');
       console.log(cart);
-      createOrder();
+      createOrder(grandTotal);
     });
   }
 }

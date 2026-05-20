@@ -237,3 +237,14 @@ export async function deleteRemoteCartItem(cartItemId: string): Promise<boolean>
     return false;
   }
 }
+
+export async function emptyCart(cart: CartItem[]){
+
+  for (const cartItem of cart) {
+
+    await fetch(`http://localhost:3000/cart/${cartItem.id}`, {
+      method: 'DELETE'
+    });
+
+  }
+}
