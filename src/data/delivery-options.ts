@@ -7,6 +7,15 @@ export interface DeliveryOption {
 export async function getDeliveryOptions(){
   try{
     console.log('loading...');
+    const checkoutEmptyEl = document.querySelector('.js-cart-empty') as HTMLElement;
+    const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
+
+    if(checkoutEmptyEl && checkoutGridEl){
+      checkoutEmptyEl.classList.add('hidden');
+      checkoutGridEl.classList.add('hidden');
+      console.log('this is great');
+    };
+
     const url = 'https://69d1185f90cd06523d5dd7c7.mockapi.io/delivery-options';
     const response = await fetch(url);
 
@@ -22,7 +31,9 @@ export async function getDeliveryOptions(){
   } catch(error) {
     console.error(error);
   } finally {
-    // end loading state and make other changes
+    const homepageSkeletonEle = document.querySelector('.js-loading-homepage') as HTMLElement;
+
+    homepageSkeletonEle.classList.add('hidden');
   }
 };
 

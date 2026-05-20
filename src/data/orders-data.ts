@@ -11,20 +11,37 @@ type RenderOrderHtml = (orders: Order[]) => void
 
 export async function getOrderData(renderOrderHtml: RenderOrderHtml){
   const url = 'https://69ada80eb50a169ec87fef13.mockapi.io/orders';
+  const orderListEl = document.querySelector('.js-order-list') as HTMLElement;
+
   try{
+    console.log(orderListEl);
     console.log('Getting orders from backend');
+
+    if(orderListEl){
+      orderListEl.classList.add('hidden');
+      console.log('list is hidden');
+    }
+
     const response = await fetch(url);
     if(!response.ok){
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: Order[] = await response.json();
     console.log(data);
     const orders = data.toReversed();
     renderOrderHtml(orders);
   }
   catch(error){
     console.error(`Couldn't create order ${error}`);
+  } 
+  finally {
+    const homepageSkeletonEle = document.querySelector('.js-loading-homepage') as HTMLElement;
+
+    if(orderListEl && homepageSkeletonEle){
+      orderListEl.classList.remove('hidden');
+      homepageSkeletonEle.classList.add('hidden');
+    }
   }
 }
 

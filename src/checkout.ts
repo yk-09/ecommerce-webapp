@@ -20,19 +20,14 @@ getDeliveryOptions()
     const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
 
     if(cart.length && deliveryOptions){
-
       console.log('cart present');
       renderCartSummary(deliveryOptions, cart, products);
       renderPaymentSummaryHtml(deliveryOptions, cart, products);
-
-      checkoutEmptyEl.classList.add('hidden');
 
       checkoutGridEl.classList.remove('hidden');
     }else{
 
       console.log('cart absent')
       checkoutEmptyEl.classList.remove('hidden');
-
-      checkoutGridEl.classList.add('hidden');
     }
   });

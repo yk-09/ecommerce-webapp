@@ -167,6 +167,7 @@ orderRowEl?.addEventListener("click", async (e) => {
         const products: Product[] = JSON.parse(productsData);
 
         if (freshOptions && freshCart && products) {
+
           renderPaymentSummaryHtml(freshOptions, freshCart, products);
           console.log("Payment summary successfully updated!");
 
@@ -177,11 +178,13 @@ orderRowEl?.addEventListener("click", async (e) => {
           
           if(!freshCart.length){
             const checkoutEmptyEl = document.querySelector('.js-cart-empty') as HTMLElement;
-            const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
 
             checkoutEmptyEl.classList.remove('hidden');
+            console.log('cart is zero');
+          }else{
+            const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
 
-            checkoutGridEl.classList.add('hidden');
+            checkoutGridEl.classList.remove('hidden');
           }
         }
       } catch (refreshError) {

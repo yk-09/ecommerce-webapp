@@ -113,6 +113,10 @@ body {
     font-size: 0.85rem;
 }
 
+.hidden{
+  display: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .order-card-header { flex-direction: column; gap: 10px; }
