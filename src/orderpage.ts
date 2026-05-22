@@ -106,7 +106,9 @@ function renderOrderProducts(order: Order): string{
           </div>
         </div>
         <div class="product-actions">
-          <button class="btn btn-primary">Track package</button>
+          <a class="btn btn-primary" href="tracking-page.html?orderId=${order.orderId}&productId=${orderItem.productId}">
+            Track package
+          </a>
         </div>
       </div>
     `
