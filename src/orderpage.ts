@@ -3,6 +3,7 @@ import { Order } from "./data/orders-data";
 import { Product } from "./homepage";
 import { DeliveryOption } from "./data/delivery-options";
 import { getOrderData } from "./data/orders-data";
+import dayjs from "dayjs";
 
 getOrderData(renderOrderHtml);
 
@@ -18,22 +19,16 @@ const deliveryOptions: DeliveryOption[] = JSON.parse(optionsData);
 function renderOrderHtml(orders: Order[]): void {
   const ordersHtml = orders.map((order) => {
 
-    const dateString = order.orderTime;
-    const date = new Date(dateString);
-
-    const formattedDate = date.toLocaleDateString('en-US', {
-      month: 'long', 
-      day: 'numeric'
-    });
-
-
+    const orderDateStr = order.orderTime;
+    const orderDate = dayjs(orderDateStr);
+    const orderDateFormatted = orderDate.format('dddd, MMMM D');
     const orderHtml = 
     `
       <article class="order-card">
         <header class="order-card-header">
           <div class="meta-item">
             <span class="label">Order Placed:</span>
-            <span class="value">${formattedDate}</span>
+            <span class="value">${orderDateFormatted}</span>
           </div>
           <div class="meta-item">
             <span class="label">Total:</span>

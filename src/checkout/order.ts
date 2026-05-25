@@ -251,6 +251,18 @@ orderRowEl?.addEventListener("click", async (e) => {
         renderPaymentSummaryHtml(freshOptions, freshCart, products);
         renderCartSummary(freshOptions, freshCart, products);
         renderUpdateCartQuantity(freshCart);
+
+        if(!freshCart.length){
+          const checkoutEmptyEl = document.querySelector('.js-cart-empty') as HTMLElement;
+
+          checkoutEmptyEl.classList.remove('hidden');
+          console.log('cart is zero');
+        }else{
+          const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
+
+          checkoutGridEl.classList.remove('hidden');
+        }
+
       }
     } catch (error) {
       console.error("Network error while saving quantity:", error);
@@ -287,6 +299,18 @@ orderRowEl?.addEventListener("click", async (e) => {
           console.log("Payment summary successfully updated!");
           renderCartSummary(freshOptions, freshCart, products);
           console.log("Cart summary successfully updated!");
+
+          if(!freshCart.length){
+            const checkoutEmptyEl = document.querySelector('.js-cart-empty') as HTMLElement;
+
+            checkoutEmptyEl.classList.remove('hidden');
+            console.log('cart is zero');
+          }else{
+            const checkoutGridEl = document.querySelector('.js-checkout-grid') as HTMLElement;
+
+            checkoutGridEl.classList.remove('hidden');
+          }
+
         }
       } catch (error) {
         console.error("One of the API calls failed:", error);

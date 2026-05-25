@@ -1,8 +1,9 @@
-import { CartItem, emptyCart } from "./cart";
+import dayjs from "dayjs";
+import { CartItem } from "./cart";
 
 export interface Order {
   orderId: string,
-  orderTime: string,
+  orderTime: dayjs.Dayjs,
   products: CartItem[],
   totalPrice: number
 }
@@ -31,6 +32,7 @@ export async function getOrderData(renderOrderHtml: RenderOrderHtml){
     console.log(data);
     const orders = data.toReversed();
     renderOrderHtml(orders);
+    localStorage.setItem('kamnaOrders', JSON.stringify(orders));
   }
   catch(error){
     console.error(`Couldn't create order ${error}`);
@@ -56,7 +58,7 @@ export async function createOrder(grandTotal: number) {
 
   const orderData: Order = {
     orderId: crypto.randomUUID(),
-    orderTime: new Date().toISOString(),
+    orderTime: dayjs(),
     products: cart,
     totalPrice: grandTotal,
   };
@@ -78,8 +80,29 @@ export async function createOrder(grandTotal: number) {
       throw "error";
     }
 
-    // const order = await response.json();
-    emptyCart(cart);
+    const cartResponse = await fetch(
+      'https://69d1185f90cd06523d5dd7c7.mockapi.io/cart'
+    );
+
+    const backendCart = await cartResponse.json();
+
+
+
+    // STEP 3: delete all cart items
+    await Promise.all(
+
+      backendCart.map((cartItem: any) => {
+
+        return fetch(
+          `https://69d1185f90cd06523d5dd7c7.mockapi.io/cart/${cartItem.id}`,
+          {
+            method: 'DELETE',
+          }
+        );
+
+      })
+
+    );
     localStorage.removeItem('kamnaCart');
     // console.log(order);
   } catch (error) {
