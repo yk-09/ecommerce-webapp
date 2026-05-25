@@ -97,7 +97,6 @@ function renderOrderProducts(order: Order): string{
               Arriving on: <span class="arrival-date">March 31</span>
             </p>
             <p class="qty">Quantity: ${orderItem.productQuantity}</p>
-            <button class="btn btn-secondary">Buy it again</button>
           </div>
         </div>
         <div class="product-actions">
