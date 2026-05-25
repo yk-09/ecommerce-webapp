@@ -98,7 +98,7 @@ function renderProductsHtml(products: Product[]): void {
   
 
   // after te html is rendered make add to hart button interactive 
-  let timeoutId: number;
+  let timeoutId: ReturnType<typeof setTimeout>
   if(productsRowEle){
     productsRowEle.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;

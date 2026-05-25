@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/yk-09/ecommerce-webapp#readme",
   "devDependencies": {
+    "@types/node": "^25.9.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {
