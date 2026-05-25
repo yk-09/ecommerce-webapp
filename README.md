@@ -264,7 +264,7 @@ _Add project screenshots here_
 # Installation
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/yk-09/ecommerce-webapp.git
 cd kamna-ecommerce
 npm install
 npm run dev
